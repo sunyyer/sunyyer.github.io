@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
             "left": x,
             "position": "absolute",
             "font-weight": "bold",
-            "color": "#FFC0CB"
+            "color": " #FFC0CB"
         });
         $("body").append($i);
         $i.animate({
