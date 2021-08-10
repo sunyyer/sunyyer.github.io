@@ -105,15 +105,15 @@
 
 
 
-<meta name="description" content="SQL注入官方解释 SQL注入，一般是指攻击者构造特殊的SQL语句，由于输入参数未经过滤，直接拼接到后端SQL语句当中解析，达到对数据库非法操作的一种攻击方法。存在SQL注入漏洞的参数位置，常称为注入点。  SQL注入方式分类整形注入 注入点数据类型为整形则为整形注入 以下写一个完整的整形注入实例：123456789101112131415161.http:&#x2F;&#x2F;xxx.com&#x2F;?id&#x3D;1">
+<meta name="description" content="SQL注入官方解释 SQL注入，一般是指攻击者构造特殊的SQL语句，由于输入参数未经过滤，直接拼接到后端SQL语句当中解析，达到对数据库非法操作的一种攻击方法。存在SQL注入漏洞的参数位置，常称为注入点。  SQL注入方式分类整形注入 注入点数据类型为整形则为整形注入  以下写一个完整的整形注入实例： 123456789101112131415161.http:&#x2F;&#x2F;xxx.com&#x2F;?id&#x3D;1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL注入">
 <meta property="og:url" content="http://example.com/2021/07/07/SQL%E6%B3%A8%E5%85%A5/index.html">
 <meta property="og:site_name" content="云">
-<meta property="og:description" content="SQL注入官方解释 SQL注入，一般是指攻击者构造特殊的SQL语句，由于输入参数未经过滤，直接拼接到后端SQL语句当中解析，达到对数据库非法操作的一种攻击方法。存在SQL注入漏洞的参数位置，常称为注入点。  SQL注入方式分类整形注入 注入点数据类型为整形则为整形注入 以下写一个完整的整形注入实例：123456789101112131415161.http:&#x2F;&#x2F;xxx.com&#x2F;?id&#x3D;1">
+<meta property="og:description" content="SQL注入官方解释 SQL注入，一般是指攻击者构造特殊的SQL语句，由于输入参数未经过滤，直接拼接到后端SQL语句当中解析，达到对数据库非法操作的一种攻击方法。存在SQL注入漏洞的参数位置，常称为注入点。  SQL注入方式分类整形注入 注入点数据类型为整形则为整形注入  以下写一个完整的整形注入实例： 123456789101112131415161.http:&#x2F;&#x2F;xxx.com&#x2F;?id&#x3D;1">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-07-07T10:22:33.000Z">
-<meta property="article:modified_time" content="2021-08-09T07:03:36.096Z">
+<meta property="article:modified_time" content="2021-08-09T08:34:02.893Z">
 <meta property="article:author" content="sunyyer">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="漏洞">
@@ -369,11 +369,14 @@
 <p>SQL注入，一般是指攻击者构造特殊的SQL语句，由于输入参数未经过滤，直接拼接到后端SQL语句当中解析，达到对数据库非法操作的一种攻击方法。存在SQL注入漏洞的参数位置，常称为注入点。</p>
 </blockquote>
 <h2 id="SQL注入方式分类"><a href="#SQL注入方式分类" class="headerlink" title="SQL注入方式分类"></a>SQL注入方式分类</h2><h3 id="整形注入"><a href="#整形注入" class="headerlink" title="整形注入"></a>整形注入</h3><ul>
-<li>注入点数据类型为整形则为整形注入</li>
-<li>以下写一个完整的整形注入实例：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.http://xxx.com/?id=1      常规页面</span><br><span class="line">2.http://xxx.com/?id=1 and 1=1      真数据返回值,查看是否和id=1的常规页面返回有没有区别</span><br><span class="line">3.http://xxx.com/?id=1 and 1=2      查看返回值是否和真查询一致，若不一致，说明存在注入点。</span><br><span class="line">4.order by 2 、order by  3           查询字段数量,假设2和3返回不一致，2返回值和之前一致，则说明字段数量为2</span><br><span class="line">5.id=-1 union select 1,2            -1先保证查的数据不存在，再使用union；接着就查到1和2两个插入点。</span><br><span class="line">6.union select 1,database()         爆数据库名</span><br><span class="line">7.union select 1,version()          爆版本名，从这儿查出数据库的种类</span><br><span class="line">8.union select 1,group_concat(schema_name)from information_schema.schemata        获取所有数据库名，schemata存有所有database的表。</span><br><span class="line">9.select schema_name from information_schema.schemata limit 0,1       当然也可以逐条获取，只需修改limit后的0就行。</span><br><span class="line">10.union select 1,group_concat(table_name)from information_schema.tables where table_schema=&#x27;xxx&#x27;    获取所有数据库所有表名</span><br><span class="line">11.select table_name from information_schema.tables where table_schema=&#x27;xxx&#x27; limit 0,1        单一获取表名，方法同上。</span><br><span class="line">12.union select 1,group_concat(column_name)from information_schema.columns where table_schema=&#x27;xxx&#x27; and table_name=&#x27;xxx&#x27;        获取所有字段名。</span><br><span class="line">13.select column_name from information_schema.columns where table_schema=&#x27;xxx&#x27; and table_name=&#x27;xxx&#x27; limit 0,1     方法同上不再赘述。</span><br><span class="line">14.union select 1,group_concat(xxx(表名))from xxx.xxx(库名+表名)          获取所有字段数据。</span><br><span class="line">15.union select 1,(select xxx from xxx.xxx limit0,1)        方法同上。</span><br><span class="line">整体思路就是：判断是否存在注入点——找到判断插入点数量——查找数据库内容——查找表内容——查找段内容——查找值</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="字符型注入"><a href="#字符型注入" class="headerlink" title="字符型注入"></a>字符型注入</h3><ul>
-<li>除了注入点一个为字符，一个为整型外，字符型注入与整形注入最大的区别就是字符型注入需要闭合引号，因为在我们注入一个引号时，mysql在执行时引号是不成对的，所以需要注释掉引号或者闭合等，如下：<blockquote>
+<li><p>注入点数据类型为整形则为整形注入</p>
+</li>
+<li><p>以下写一个完整的整形注入实例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.http://xxx.com/?id=1      常规页面</span><br><span class="line">2.http://xxx.com/?id=1 and 1=1      真数据返回值,查看是否和id=1的常规页面返回有没有区别</span><br><span class="line">3.http://xxx.com/?id=1 and 1=2      查看返回值是否和真查询一致，若不一致，说明存在注入点。</span><br><span class="line">4.order by 2 、order by  3           查询字段数量,假设2和3返回不一致，2返回值和之前一致，则说明字段数量为2</span><br><span class="line">5.id=-1 union select 1,2            -1先保证查的数据不存在，再使用union；接着就查到1和2两个插入点。</span><br><span class="line">6.union select 1,database()         爆数据库名</span><br><span class="line">7.union select 1,version()          爆版本名，从这儿查出数据库的种类</span><br><span class="line">8.union select 1,group_concat(schema_name)from information_schema.schemata        获取所有数据库名，schemata存有所有database的表。</span><br><span class="line">9.select schema_name from information_schema.schemata limit 0,1       当然也可以逐条获取，只需修改limit后的0就行。</span><br><span class="line">10.union select 1,group_concat(table_name)from information_schema.tables where table_schema=&#x27;xxx&#x27;    获取所有数据库所有表名</span><br><span class="line">11.select table_name from information_schema.tables where table_schema=&#x27;xxx&#x27; limit 0,1        单一获取表名，方法同上。</span><br><span class="line">12.union select 1,group_concat(column_name)from information_schema.columns where table_schema=&#x27;xxx&#x27; and table_name=&#x27;xxx&#x27;        获取所有字段名。</span><br><span class="line">13.select column_name from information_schema.columns where table_schema=&#x27;xxx&#x27; and table_name=&#x27;xxx&#x27; limit 0,1     方法同上不再赘述。</span><br><span class="line">14.union select 1,group_concat(xxx(表名))from xxx.xxx(库名+表名)          获取所有字段数据。</span><br><span class="line">15.union select 1,(select xxx from xxx.xxx limit0,1)        方法同上。</span><br><span class="line">整体思路就是：判断是否存在注入点——找到判断插入点数量——查找数据库内容——查找表内容——查找段内容——查找值</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="字符型注入"><a href="#字符型注入" class="headerlink" title="字符型注入"></a>字符型注入</h3></li>
+<li><p>除了注入点一个为字符，一个为整型外，字符型注入与整形注入最大的区别就是字符型注入需要闭合引号，因为在我们注入一个引号时，mysql在执行时引号是不成对的，所以需要注释掉引号或者闭合等，如下：</p>
+<blockquote>
 <p>admin’ #      它就等于admin’ #”，后门的”会被注释为’，这样就会闭合</p>
 </blockquote>
 </li>
@@ -437,6 +440,13 @@
 <hr>
 <ol start="3">
 <li>知不知道 order by 注入</li>
+</ol>
+<ul>
+<li>SQL预编译中order by不能参数化，本质是一方面预编译只有自动加引号的setString()方法,没有不加引号的方法；另一方面order by后接的字段名不能有引号。</li>
+<li>更本质的说法：不只是order by，凡是字符串但又不能加引号的位置都不能参数化；包括sql关键字、库名表名字段名函数名等。</li>
+<li>应对方法就是通过添加白名单的方法。</li>
+</ul>
+<ol start="4">
 <li>sql注入绕waf怎么绕</li>
 </ol>
 <ul>
@@ -468,6 +478,13 @@
 <li><p>整体来说我是分为两类，按其payload语句的闭合方式分为int型和string型按其传输方式又可分为：GET型和POST型以及HTTP头的传输（UA,XFF,Referer）根据其在页面返回的内容可分为：有回显和盲注（其中我将报错注入归结为盲注）还有其他的：编码注入；二次注入；宽字节注入；dns_log注入；堆叠注入</p>
 </li>
 <li><p>http头，url,登录框(form表单)等与后台数据库有增删改查交互的地方</p>
+</li>
+<li><p>更为准确的说应该是：</p>
+<ol>
+<li>搜索</li>
+<li>order by、limit</li>
+<li>日期类型 </li>
+</ol>
 </li>
 </ul>
 <hr>
@@ -536,28 +553,32 @@ apostrophenullencode.py      将单引号替换为宽字节 unicode 字符，用
 </li>
 <li><p>SQL注入绕过的方法，安全狗，云锁，宝塔有没有绕过的记录？</p>
 </li>
-<li><p>SQL注入原理，绕过规则、注入点发现、注入类型、SQL提权/mysql提权</p>
-</li>
-<li><p>什么是盲注？三种类型，基于布尔类型的盲注，基于报错的盲注，基于时间延时的盲注；堆叠注入；宽字节注入；URLDecoder二次注入</p>
-</li>
-<li><p>检查注入的思路</p>
-</li>
-<li><p>发现 test.jsp?cid=150 注入点，你有哪几种思路获取webshell?</p>
-</li>
-<li><p>以下链接存在 SQL注入漏洞，对于这个变形注入，你有什么思路？</p>
-</li>
-<li><p>mysql注入点，用工具对目标站直接写入一句话，需要哪些条件？</p>
-</li>
-<li><p>Mysql的网站注入，5.0以上和5.0以下有什么区别？</p>
-</li>
-<li><p>sqlmap如何对一个注入点注入，sqlmap如何注入一个post的包?</p>
-</li>
-<li><p>你都了解哪些SQL注入的bypass技巧?</p>
-</li>
-<li><p>介绍 SQL 注入漏洞成因，如何防范？注入方式有哪些？除了数据库数据，利用方式还有哪些？</p>
-</li>
-<li><p>宽字符注入的原理？如何利用宽字符注入漏洞，payload如何构造及修复方案？</p>
-</li>
+</ol>
+<ul>
+<li>参见文章&lt;waf绕过&gt;</li>
+</ul>
+<ol start="17">
+<li>SQL注入原理，绕过规则、注入点发现、注入类型、SQL提权/mysql提权</li>
+<li>什么是盲注？</li>
+</ol>
+<ul>
+<li>Answer:三种类型，基于布尔类型的盲注，基于报错的盲注，基于时间延时的盲注；堆叠注入；宽字节注入；URLDecoder二次注入</li>
+</ul>
+<ol start="19">
+<li>检查注入的思路</li>
+<li>发现 test.jsp?cid=150 注入点，你有哪几种思路获取webshell?</li>
+<li>以下链接存在 SQL注入漏洞，对于这个变形注入，你有什么思路？</li>
+<li>mysql注入点，用工具对目标站直接写入一句话，需要哪些条件？</li>
+<li>Mysql的网站注入，5.0以上和5.0以下有什么区别？</li>
+<li>sqlmap如何对一个注入点注入，sqlmap如何注入一个post的包?</li>
+<li>你都了解哪些SQL注入的bypass技巧?</li>
+</ol>
+<ul>
+<li>绕waf最重要的是需要清楚waf拦截的是pyload的哪一部分。可以一段一段测。详情参见文章&lt;waf绕过&gt;</li>
+</ul>
+<ol start="26">
+<li>介绍 SQL 注入漏洞成因，如何防范？注入方式有哪些？除了数据库数据，利用方式还有哪些？</li>
+<li>宽字符注入的原理？如何利用宽字符注入漏洞，payload如何构造及修复方案？</li>
 <li></li>
 </ol>
 
@@ -592,8 +613,8 @@ apostrophenullencode.py      将单引号替换为宽字节 unicode 字符，用
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/05/23/%E4%B8%9C%E4%BA%9AAPT%E7%BB%84%E7%BB%87/" rel="next" title="ss">
-                <i class="fa fa-chevron-left"></i> ss
+              <a href="/2021/05/23/%E4%B8%9C%E4%BA%9AAPT%E7%BB%84%E7%BB%87/" rel="next" title="东亚APT组织探究">
+                <i class="fa fa-chevron-left"></i> 东亚APT组织探究
               </a>
             
           </div>
@@ -692,7 +713,7 @@ apostrophenullencode.py      将单引号替换为宽字节 unicode 字符，用
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -703,7 +724,7 @@ apostrophenullencode.py      将单引号替换为宽字节 unicode 字符，用
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
