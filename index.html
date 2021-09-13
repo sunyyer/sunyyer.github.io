@@ -391,8 +391,7 @@
 
       
         
-          
-            <h1 id="Waf绕过之sql注入"><a href="#Waf绕过之sql注入" class="headerlink" title="Waf绕过之sql注入"></a>Waf绕过之sql注入</h1><h2 id="常用注释"><a href="#常用注释" class="headerlink" title="常用注释"></a>常用注释</h2><table>
+          <h1 id="Waf绕过之sql注入"><a href="#Waf绕过之sql注入" class="headerlink" title="Waf绕过之sql注入"></a>Waf绕过之sql注入</h1><h2 id="常用注释"><a href="#常用注释" class="headerlink" title="常用注释"></a>常用注释</h2><table>
 <thead>
 <tr>
 <th align="center">数据库</th>
@@ -414,62 +413,13 @@
 <td align="center">%00-%20</td>
 </tr>
 </tbody></table>
-<h2 id="绕过的一些语句功能特性"><a href="#绕过的一些语句功能特性" class="headerlink" title="绕过的一些语句功能特性"></a>绕过的一些语句功能特性</h2><ul>
-<li>selectCHAR</li>
-</ul>
-<p>SQL查询语句slect后面可以接一些特殊字符，这些字符与select相结合可以达到绕Waf的目的，除了select语句之外union\from等关键字前后也可以连接一些特殊字符，这些关键字前后就可以作为fuzz的点。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! @ &#123; ~ &quot; &#x27; + -</span><br></pre></td></tr></table></figure>
-<h2 id="等价替换"><a href="#等价替换" class="headerlink" title="等价替换"></a>等价替换</h2><ul>
-<li><p>函数替换</p>
-<ol>
-<li>截取字符串是 SQL注入中的常用功能，通常使用mid(string,1,1)<blockquote>
-<p>sekect mid(user(),1,1);</p>
-</blockquote>
-</li>
-<li>usbstr(user() from 1 for 1);</li>
-<li>SELECT replace(LPAD(user(),2,1),LPAD(user(),2-1,1),””);</li>
-<li>SELECT LPAD(REVERSE(TRIM(lpad(user(),1,SPACE(1)))),1,SPACE(1));</li>
-<li>ascii(c)、ord(c)&lt;=&gt;conv(hex(c),16,10)<blockquote>
-<p>select ord(“t”);</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><p>逗号过滤</p>
-<p>  逗号在被waf拦截或过滤时，通过不含引号的sql语句代替。</p>
-<ol>
-<li>case when 代替if</li>
-<li>union select 1,2,3&lt;=&gt;union select*from (select 1)a join (select 2)b join (select 3)c</li>
-<li>limit 2,1 &lt;=&gt;limit 1 offset 2 </li>
-</ol>
-</li>
-<li><p>比较表达式代替</p>
-<ul>
-<li>代替【=】</li>
-</ul>
-<p>  1.if(abs(strcmp((ascii(mid(user()from(1)for(2)))),114))-1,1,0)<br>  2.find_in_set()</p>
-<pre><code>  &gt; select find_in_set(ord(mid(user() from 1 for 1)), 114);
-  &gt; select find_in_set(ord(mid(user() from 1 for 1)), 115);
-  
-  前者得到的结果为1，后者得到的结果为0，查询114（root）中r的结果。
-</code></pre>
-<p>  3.regexp</p>
-<pre><code>  &gt; select ord(&quot;r&quot;) regexp 114;
-</code></pre>
-<ul>
-<li>代替【&lt;&gt;】</li>
-</ul>
-<ol>
-<li>least(ord(‘r’),115)、greatest(ord(‘r’),113)</li>
-<li>between n and m<blockquote>
-<p>select ord(‘r’) between 114 and 115;</p>
-</blockquote>
-</li>
-</ol>
-</li>
-</ul>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/08/20/waf%E7%BB%95%E8%BF%87/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
