@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="web,bypass," />
+  <meta name="keywords" content="渗透,Red Team," />
 
 
 
@@ -105,18 +105,18 @@
 
 
 
-<meta name="description" content="Waf绕过之sql注入常用注释   数据库 MySql Oracle MsSql    注释符 &#x2F;&#x2F;、#、&#x2F;!&#x2F;、&#x2F;!50000xx&#x2F;、–、– -、–+ –、&#x2F;**&#x2F;、–%0a- –、&#x2F;**&#x2F;、%0a-   空白字符 %09%0A%0B%0C%0D%20 %00%09%0A%0B%0C%0D%20 %00-%20">
+<meta name="description" content="红队攻击流程与技术细谈打点&amp;ensp;&amp;ensp;  在对目标开始做信息收集时，对应于不同的渗透环境，这个环节的处理也不同，具体可以参考①信息收集这篇文章。打点的时候就需要开始做②隐匿的工作，隐匿参考后续文章。&amp;ensp;&amp;ensp;这里除了之前推荐的spiderfoot之外，知道创宇出品的Kunyu也是一个不错的选择。当然一些比较新的资产，需要人工去收集信息了。这篇文章直接从获取目标开始。 目标">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Waf绕过">
-<meta property="og:url" content="http://sunyyer.com/2021/08/20/waf%E7%BB%95%E8%BF%87/index.html">
+<meta property="og:title" content="红队技术">
+<meta property="og:url" content="http://sunyyer.com/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/index.html">
 <meta property="og:site_name" content="云">
-<meta property="og:description" content="Waf绕过之sql注入常用注释   数据库 MySql Oracle MsSql    注释符 &#x2F;&#x2F;、#、&#x2F;!&#x2F;、&#x2F;!50000xx&#x2F;、–、– -、–+ –、&#x2F;**&#x2F;、–%0a- –、&#x2F;**&#x2F;、%0a-   空白字符 %09%0A%0B%0C%0D%20 %00%09%0A%0B%0C%0D%20 %00-%20">
+<meta property="og:description" content="红队攻击流程与技术细谈打点&amp;ensp;&amp;ensp;  在对目标开始做信息收集时，对应于不同的渗透环境，这个环节的处理也不同，具体可以参考①信息收集这篇文章。打点的时候就需要开始做②隐匿的工作，隐匿参考后续文章。&amp;ensp;&amp;ensp;这里除了之前推荐的spiderfoot之外，知道创宇出品的Kunyu也是一个不错的选择。当然一些比较新的资产，需要人工去收集信息了。这篇文章直接从获取目标开始。 目标">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-08-20T10:22:33.000Z">
-<meta property="article:modified_time" content="2021-09-13T09:13:45.270Z">
+<meta property="article:published_time" content="2021-11-03T10:22:33.000Z">
+<meta property="article:modified_time" content="2021-11-03T15:14:42.112Z">
 <meta property="article:author" content="sunyyer">
-<meta property="article:tag" content="web">
-<meta property="article:tag" content="bypass">
+<meta property="article:tag" content="渗透">
+<meta property="article:tag" content="Red Team">
 <meta name="twitter:card" content="summary">
 
 
@@ -147,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="http://sunyyer.com/2021/08/20/waf绕过/"/>
+  <link rel="canonical" href="http://sunyyer.com/2021/11/03/红队攻击流程与技术细谈/"/>
 
 
 
 
 
-  <title>Waf绕过 | 云</title>
+  <title>红队技术 | 云</title>
   
 
 
@@ -290,7 +290,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/08/20/waf%E7%BB%95%E8%BF%87/">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -307,7 +307,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Waf绕过</h1>
+          <h1 class="post-title" itemprop="name headline">红队技术</h1>
         
 
         <div class="post-meta">
@@ -319,8 +319,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-20T18:22:33+08:00">
-                2021-08-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-03T18:22:33+08:00">
+                2021-11-03
               </time>
             
 
@@ -353,8 +353,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/web%E5%AE%89%E5%85%A8/" itemprop="url" rel="index">
-                    <span itemprop="name">web安全</span>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index">
+                    <span itemprop="name">渗透测试</span>
                   </a>
                 </span>
 
@@ -395,84 +395,51 @@
       
 
       
-        <h1 id="Waf绕过之sql注入"><a href="#Waf绕过之sql注入" class="headerlink" title="Waf绕过之sql注入"></a>Waf绕过之sql注入</h1><h2 id="常用注释"><a href="#常用注释" class="headerlink" title="常用注释"></a>常用注释</h2><table>
-<thead>
-<tr>
-<th align="center">数据库</th>
-<th align="center">MySql</th>
-<th align="center">Oracle</th>
-<th align="center">MsSql</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">注释符</td>
-<td align="center">/<em>/、#、/!/、/!50000xx</em>/、–、– -、–+</td>
-<td align="center">–、/**/、–%0a-</td>
-<td align="center">–、/**/、%0a-</td>
-</tr>
-<tr>
-<td align="center">空白字符</td>
-<td align="center">%09%0A%0B%0C%0D%20</td>
-<td align="center">%00%09%0A%0B%0C%0D%20</td>
-<td align="center">%00-%20</td>
-</tr>
-</tbody></table>
-<span id="more"></span>
-
-<h2 id="绕过的一些语句功能特性"><a href="#绕过的一些语句功能特性" class="headerlink" title="绕过的一些语句功能特性"></a>绕过的一些语句功能特性</h2><ul>
-<li>selectCHAR</li>
-</ul>
-<p>SQL查询语句slect后面可以接一些特殊字符，这些字符与select相结合可以达到绕Waf的目的，除了select语句之外union\from等关键字前后也可以连接一些特殊字符，这些关键字前后就可以作为fuzz的点。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! @ &#123; ~ &quot; &#x27; + -</span><br></pre></td></tr></table></figure>
-<h2 id="等价替换"><a href="#等价替换" class="headerlink" title="等价替换"></a>等价替换</h2><ul>
-<li><p>函数替换</p>
-<ol>
-<li>截取字符串是 SQL注入中的常用功能，通常使用mid(string,1,1)<blockquote>
-<p>sekect mid(user(),1,1);</p>
-</blockquote>
-</li>
-<li>usbstr(user() from 1 for 1);</li>
-<li>SELECT replace(LPAD(user(),2,1),LPAD(user(),2-1,1),””);</li>
-<li>SELECT LPAD(REVERSE(TRIM(lpad(user(),1,SPACE(1)))),1,SPACE(1));</li>
-<li>ascii(c)、ord(c)&lt;=&gt;conv(hex(c),16,10)<blockquote>
-<p>select ord(“t”);</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li><p>逗号过滤</p>
-<p>  逗号在被waf拦截或过滤时，通过不含引号的sql语句代替。</p>
-<ol>
-<li>case when 代替if</li>
-<li>union select 1,2,3&lt;=&gt;union select*from (select 1)a join (select 2)b join (select 3)c</li>
-<li>limit 2,1 &lt;=&gt;limit 1 offset 2 </li>
-</ol>
-</li>
-<li><p>比较表达式代替</p>
+        <h1 id="红队攻击流程与技术细谈"><a href="#红队攻击流程与技术细谈" class="headerlink" title="红队攻击流程与技术细谈"></a>红队攻击流程与技术细谈</h1><h2 id="打点"><a href="#打点" class="headerlink" title="打点"></a>打点</h2><p>&ensp;&ensp;  在对目标开始做信息收集时，对应于不同的渗透环境，这个环节的处理也不同，具体可以参考①信息收集这篇文章。<strong>打点的时候就需要开始做②隐匿的工作，隐匿参考后续文章。</strong><br>&ensp;&ensp;这里除了之前推荐的spiderfoot之外，知道创宇出品的Kunyu也是一个不错的选择。当然一些比较新的资产，需要人工去收集信息了。这篇文章直接从获取目标开始。</p>
+<h2 id="目标突破点"><a href="#目标突破点" class="headerlink" title="目标突破点"></a>目标突破点</h2><h3 id="弱口令"><a href="#弱口令" class="headerlink" title="弱口令"></a>弱口令</h3><p>&ensp;&ensp; 常用弱口令类型包括<strong>SQL/Redis/VPN/Jenkins/web</strong>,弱口令需要通过爆破的方式。爆破主要考虑密码字典、验证码绕过、验证码逻辑错误等一些情况，需要注意的点有：</p>
 <ul>
-<li>代替【=】</li>
+<li>Web<ul>
+<li>忘记密码处存在逻辑漏洞</li>
+<li>根据系统猜测姓名工号</li>
+<li>JS正则与Google信息搜索</li>
+<li>如果未做身份枚举次数的话可以直接枚举用户名</li>
 </ul>
-<p>  1.if(abs(strcmp((ascii(mid(user()from(1)for(2)))),114))-1,1,0)<br>  2.find_in_set()</p>
-<pre><code>  &gt; select find_in_set(ord(mid(user() from 1 for 1)), 114);
-  &gt; select find_in_set(ord(mid(user() from 1 for 1)), 115);
-  
-  前者得到的结果为1，后者得到的结果为0，查询114（root）中r的结果。
-</code></pre>
-<p>  3.regexp</p>
-<pre><code>  &gt; select ord(&quot;r&quot;) regexp 114;
-</code></pre>
+</li>
+<li>Redis</li>
+</ul>
+<p>&ensp;&ensp; 后台的明文口令是比较难爆破尝试的，建议的方法是在扫描中去根据数据库的版本去下EXP，一般数据库版本都不会更新的太快。例如在查了Redis的Server信息后，直接用REC。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Dliv3/redis-rogue-server">4.XRCE</a><br><a href="https//github.com/0671/RedisModules-ExecuteCommand-for-Windows">5.xRCE</a></p>
 <ul>
-<li>代替【&lt;&gt;】</li>
+<li>VPN</li>
 </ul>
+<p>&ensp;&ensp;和Web没什么区别。</p>
+<ul>
+<li>Jenkins</li>
+</ul>
+<p>&ensp;&ensp; 后台直接写可执行脚本，LOLBAS下载执行。</p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>&ensp;&ensp; 快要赶上第一威胁的宝座了，以最常见的shiro漏洞做思，分下面几步：</p>
+<hr>
 <ol>
-<li>least(ord(‘r’),115)、greatest(ord(‘r’),113)</li>
-<li>between n and m<blockquote>
-<p>select ord(‘r’) between 114 and 115;</p>
-</blockquote>
-</li>
+<li>找指纹，找目标站点的shiro指纹，可以用OneforALL，也可以用fofa，方法不限，找到就利用。</li>
+<li>将URL导入到识别工具，直接跑key值。</li>
+<li>漏洞具体利用方法参考其他文章。</li>
 </ol>
-</li>
-</ul>
+<p>&ensp;&ensp;tools:</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/pmiaowu/BurpShiroPassiveScan">Shiro扫描工具</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wyzxxz/shiro_rce_tool">ShiroRCEkey值</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/j1anFen/shiro_attack">Shiro渗透测试</a></p>
+<h3 id="任意文件上传"><a href="#任意文件上传" class="headerlink" title="任意文件上传"></a>任意文件上传</h3><p>&ensp;&ensp;可以直接拿shell,同样找起来很费劲。首先应该找上传点，在扫了目录后找寻CMS或者中间件开放框架的通用插件，然后验证上传是否给予后端的白名单校验方式。需要注意的是针对上传点，不要进行FUZZ，先探好点。分类说一下：</p>
+<ol>
+<li>找寻上传点</li>
+</ol>
+<p>&ensp;&ensp;&ensp;&ensp;关注的地方是RSS订阅点，客服入口处，微信小程序入口，swagger信息泄露造成的upload接口暴露。   </p>
+<ol start="2">
+<li>通用插件查找</li>
+</ol>
+<p>&ensp;&ensp;&ensp;&ensp;chrome&amp;firefox插件用起来比较舒服，推荐What</p>
+<ol start="3">
+<li>验证白名单</li>
+</ol>
 
       
     </div>
@@ -493,7 +460,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://sunyyer.com/2021/08/20/waf%E7%BB%95%E8%BF%87/" title="Waf绕过">http://sunyyer.com/2021/08/20/waf%E7%BB%95%E8%BF%87/</a>
+    <a href="http://sunyyer.com/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/" title="红队技术">http://sunyyer.com/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -508,9 +475,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/web/" rel="tag"># web</a>
+            <a href="/tags/%E6%B8%97%E9%80%8F/" rel="tag"># 渗透</a>
           
-            <a href="/tags/bypass/" rel="tag"># bypass</a>
+            <a href="/tags/Red-Team/" rel="tag"># Red Team</a>
           
         </div>
       
@@ -523,8 +490,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/08/14/%E7%9B%AE%E6%A0%87%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%8E%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90/%E7%9B%AE%E6%A0%87%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%8E%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90/" rel="next" title="目标信息收集与威胁分析">
-                <i class="fa fa-chevron-left"></i> 目标信息收集与威胁分析
+              <a href="/2021/08/20/waf%E7%BB%95%E8%BF%87/" rel="next" title="Waf绕过">
+                <i class="fa fa-chevron-left"></i> Waf绕过
               </a>
             
           </div>
@@ -532,10 +499,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/" rel="prev" title="红队技术">
-                红队技术 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -667,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Waf%E7%BB%95%E8%BF%87%E4%B9%8Bsql%E6%B3%A8%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">Waf绕过之sql注入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E9%87%8A"><span class="nav-number">1.1.</span> <span class="nav-text">常用注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AF%AD%E5%8F%A5%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">绕过的一些语句功能特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%89%E4%BB%B7%E6%9B%BF%E6%8D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">等价替换</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88"><span class="nav-number">1.</span> <span class="nav-text">红队攻击流程与技术细谈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">打点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E7%AA%81%E7%A0%B4%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">目标突破点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="nav-number">1.2.1.</span> <span class="nav-text">弱口令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">1.2.2.</span> <span class="nav-text">反序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="nav-number">1.2.3.</span> <span class="nav-text">任意文件上传</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
