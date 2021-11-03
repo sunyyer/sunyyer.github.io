@@ -391,54 +391,174 @@
 
       
         
-          
-            <h1 id="红队攻击流程与技术细谈"><a href="#红队攻击流程与技术细谈" class="headerlink" title="红队攻击流程与技术细谈"></a>红队攻击流程与技术细谈</h1><h2 id="打点"><a href="#打点" class="headerlink" title="打点"></a>打点</h2><p>&ensp;&ensp;  在对目标开始做信息收集时，对应于不同的渗透环境，这个环节的处理也不同，具体可以参考①信息收集这篇文章。<strong>打点的时候就需要开始做②隐匿的工作，隐匿参考后续文章。</strong><br>&ensp;&ensp;这里除了之前推荐的spiderfoot之外，知道创宇出品的Kunyu也是一个不错的选择。当然一些比较新的资产，需要人工去收集信息了。这篇文章直接从获取目标开始。</p>
-<h2 id="目标突破点"><a href="#目标突破点" class="headerlink" title="目标突破点"></a>目标突破点</h2><h3 id="弱口令"><a href="#弱口令" class="headerlink" title="弱口令"></a>弱口令</h3><p>&ensp;&ensp; 常用弱口令类型包括<strong>SQL/Redis/VPN/Jenkins/web</strong>,弱口令需要通过爆破的方式。爆破主要考虑密码字典、验证码绕过、验证码逻辑错误等一些情况，需要注意的点有：</p>
-<ul>
-<li>Web<ul>
-<li>忘记密码处存在逻辑漏洞</li>
-<li>根据系统猜测姓名工号</li>
-<li>JS正则与Google信息搜索</li>
-<li>如果未做身份枚举次数的话可以直接枚举用户名</li>
-</ul>
-</li>
-<li>Redis</li>
-</ul>
-<p>&ensp;&ensp; 后台的明文口令是比较难爆破尝试的，建议的方法是在扫描中去根据数据库的版本去下EXP，一般数据库版本都不会更新的太快。例如在查了Redis的Server信息后，直接用REC。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Dliv3/redis-rogue-server">4.XRCE</a><br><a href="https//github.com/0671/RedisModules-ExecuteCommand-for-Windows">5.xRCE</a></p>
-<ul>
-<li>VPN</li>
-</ul>
-<p>&ensp;&ensp;和Web没什么区别。</p>
-<ul>
-<li>Jenkins</li>
-</ul>
-<p>&ensp;&ensp; 后台直接写可执行脚本，LOLBAS下载执行。</p>
-<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>&ensp;&ensp; 快要赶上第一威胁的宝座了，以最常见的shiro漏洞做思，分下面几步：</p>
-<hr>
-<ol>
-<li>找指纹，找目标站点的shiro指纹，可以用OneforALL，也可以用fofa，方法不限，找到就利用。</li>
-<li>将URL导入到识别工具，直接跑key值。</li>
-<li>漏洞具体利用方法参考其他文章。</li>
-</ol>
-<p>&ensp;&ensp;tools:</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/pmiaowu/BurpShiroPassiveScan">Shiro扫描工具</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/wyzxxz/shiro_rce_tool">ShiroRCEkey值</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/j1anFen/shiro_attack">Shiro渗透测试</a></p>
-<h3 id="任意文件上传"><a href="#任意文件上传" class="headerlink" title="任意文件上传"></a>任意文件上传</h3><p>&ensp;&ensp;可以直接拿shell,同样找起来很费劲。首先应该找上传点，在扫了目录后找寻CMS或者中间件开放框架的通用插件，然后验证上传是否给予后端的白名单校验方式。需要注意的是针对上传点，不要进行FUZZ，先探好点。分类说一下：</p>
-<ol>
-<li>找寻上传点</li>
-</ol>
-<p>&ensp;&ensp;&ensp;&ensp;关注的地方是RSS订阅点，客服入口处，微信小程序入口，swagger信息泄露造成的upload接口暴露。   </p>
-<ol start="2">
-<li>通用插件查找</li>
-</ol>
-<p>&ensp;&ensp;&ensp;&ensp;chrome&amp;firefox插件用起来比较舒服，推荐What</p>
-<ol start="3">
-<li>验证白名单</li>
-</ol>
+          <h1 id="红队攻击流程与技术细谈"><a href="#红队攻击流程与技术细谈" class="headerlink" title="红队攻击流程与技术细谈"></a>红队攻击流程与技术细谈</h1><h2 id="打点"><a href="#打点" class="headerlink" title="打点"></a>打点</h2><p>&ensp;&ensp;  在对目标开始做信息收集时，对应于不同的渗透环境，这个环节的处理也不同，具体可以参考①信息收集这篇文章。<strong>打点的时候就需要开始做②隐匿的工作，隐匿参考后续文章。</strong><br>&ensp;&ensp;这里除了之前推荐的spiderfoot之外，知道创宇出品的Kunyu也是一个不错的选择。当然一些比较新的资产，需要人工去收集信息了。这篇文章直接从获取目标开始。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/10/08/%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/08/%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF/" itemprop="url">流量隐匿</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-08T12:11:11+08:00">
+                2021-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E6%94%BB%E5%87%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">攻击</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="流量隐匿"><a href="#流量隐匿" class="headerlink" title="流量隐匿"></a>流量隐匿</h1><blockquote>
+<p>&ensp;&ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，<em>当你凝视深渊，深渊也在凝视你</em>。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与协议的隐匿。</p>
+</blockquote>
+<hr>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/10/08/%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1478,7 +1598,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1489,7 +1609,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
