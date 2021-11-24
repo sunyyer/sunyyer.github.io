@@ -108,7 +108,7 @@
 <meta name="description" content="个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="云">
-<meta property="og:url" content="http://sunyyer.com/archives/2021/11/index.html">
+<meta property="og:url" content="http://sunyyer.com/page/2/index.html">
 <meta property="og:site_name" content="云">
 <meta property="og:description" content="个人博客">
 <meta property="og:locale">
@@ -144,13 +144,13 @@
 
 
 
-  <link rel="canonical" href="http://sunyyer.com/archives/2021/11/"/>
+  <link rel="canonical" href="http://sunyyer.com/page/2/"/>
 
 
 
 
 
-  <title>归档 | 云</title>
+  <title>云</title>
   
 
 
@@ -169,7 +169,8 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -272,148 +273,226 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 11 篇日志。 继续努力。
-      </span>
-
+  <section id="posts" class="posts-expand">
+    
       
 
-        
-        
-        
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/01/19/SQLMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
 
         
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/19/SQLMap/" itemprop="url">SQLMap</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-19T23:22:33+08:00">
+                2021-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2021">2021</h1>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/web%E5%AE%89%E5%85%A8/" itemprop="url" rel="index">
+                    <span itemprop="name">web安全</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="SQLMap"><a href="#SQLMap" class="headerlink" title="SQLMap"></a>SQLMap</h1><h2 id="功能模块参数"><a href="#功能模块参数" class="headerlink" title="功能模块参数"></a>功能模块参数</h2><table>
+<thead>
+<tr>
+<th align="center">Target:At least one of these options has to be provided to define the target(s)</th>
+<th align="center">目标：至少为目标提供一个选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Request</td>
+<td align="center">请求：这些选项用于指定如何连接目标URL的方法</td>
+</tr>
+<tr>
+<td align="center">Optimization</td>
+<td align="center">优化：这些选项用来优化sqlmap的性能</td>
+</tr>
+<tr>
+<td align="center">Injection</td>
+<td align="center">注入：这些选项用于指定测试那些参数，提供注入payload和篡改脚本</td>
+</tr>
+<tr>
+<td align="center">Detection</td>
+<td align="center">侦测：这些选项用于侦测阶段的定制化</td>
+</tr>
+<tr>
+<td align="center">Techniques</td>
+<td align="center">技巧：这些选项用于调整特定sql注入技术的技巧</td>
+</tr>
+<tr>
+<td align="center">Enumeration</td>
+<td align="center">枚举：这些选项可用于枚举后端数据库管理系统信息、表里的数据接口，此外还可以运行你的sql语句</td>
+</tr>
+<tr>
+<td align="center">Brute force</td>
+<td align="center">暴力执行：这些选项用于暴力检查</td>
+</tr>
+<tr>
+<td align="center">User-defined function injection</td>
+<td align="center">用户定义注入函数:这些选项用于建立用户定义函数</td>
+</tr>
+<tr>
+<td align="center">File system access</td>
+<td align="center">访问文件系统：这些选项用于访问后端数据库管理系统的底层文件系统</td>
+</tr>
+<tr>
+<td align="center">Operating system access</td>
+<td align="center">操作系统连接：这些选项用于连接后端DBMS底层的os</td>
+</tr>
+<tr>
+<td align="center">Windows registry access</td>
+<td align="center">windows 注册表连接：这些选项用于连接后端DBMS的windows 注册表</td>
+</tr>
+<tr>
+<td align="center">General</td>
+<td align="center">通用：这些选项用于设置一些通用参数</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/01/19/SQLMap/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
           </div>
+          <!--/noindex-->
         
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/11/24/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url">
-              
-                <span itemprop="name">未命名</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-11-24T20:57:23+08:00"
-              content="2021-11-24" >
-          11-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/11/24/%E4%BA%BA%E7%94%9F%E7%9A%84%E6%84%8F%E4%B9%89%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2/" itemprop="url">
-              
-                <span itemprop="name">未命名</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-11-24T20:56:24+08:00"
-              content="2021-11-24" >
-          11-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/" itemprop="url">
-              
-                <span itemprop="name">红队技术</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-11-03T18:22:33+08:00"
-              content="2021-11-03" >
-          11-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </div>
   
   
   
+  </article>
+
+
+    
+  </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
