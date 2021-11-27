@@ -105,19 +105,19 @@
 
 
 
-<meta name="description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="流量隐匿">
 <meta property="og:url" content="http://sunyyer.com/2021/10/08/%E6%B5%81%E9%87%8F%E9%9A%90%E5%8C%BF/index.html">
 <meta property="og:site_name" content="云">
-<meta property="og:description" content="流量隐匿 &amp;ensp;&amp;ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，当你凝视深渊，深渊也在凝视你。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/11/27/ZPUtCncsN7FEeyo.png">
 <meta property="article:published_time" content="2021-10-08T04:11:11.000Z">
-<meta property="article:modified_time" content="2021-11-13T11:43:59.272Z">
+<meta property="article:modified_time" content="2021-11-27T11:40:27.141Z">
 <meta property="article:author" content="sunyyer">
 <meta property="article:tag" content="工具">
 <meta property="article:tag" content="Red Team">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/11/27/ZPUtCncsN7FEeyo.png">
 
 
 
@@ -395,12 +395,13 @@
       
 
       
-        <h1 id="流量隐匿"><a href="#流量隐匿" class="headerlink" title="流量隐匿"></a>流量隐匿</h1><blockquote>
+        <p><img src="https://i.loli.net/2021/11/27/ZPUtCncsN7FEeyo.png" alt="镜"></p>
+<span id="more"></span>
+
+<h1 id="流量隐匿"><a href="#流量隐匿" class="headerlink" title="流量隐匿"></a>流量隐匿</h1><blockquote>
 <p>&ensp;&ensp;这是贯穿红队与渗透的一个核心技术，可惜的是很多情况下不会产生经济效益，但它是一门很cool的技术，也是每一个极客们赖以存活的技术，<em>当你凝视深渊，深渊也在凝视你</em>。下面的一些技术和内容会有重合，因为隐匿的本质都是流量与协议。隐匿的内容很多，包括免杀的隐匿，文件隐藏等，篇幅过多后续单独写，本文只针对流量与C2的隐匿。</p>
 </blockquote>
 <hr>
-<span id="more"></span>
-
 <h2 id="流量代理"><a href="#流量代理" class="headerlink" title="流量代理"></a>流量代理</h2><p>&ensp;&ensp;流量代理会贯穿整个渗透与攻击过程，不妨把思维往大拓展，除了在进入的过程中通过协议流量外，回连、内网穿透等所有传递流量的过程中都会需要对流量进行混淆。代理工具有很多，reGeorg\Tunnel\FRP这些工具可以尝试在没有杀软和态势感知的环境下使用，如果在做敏感环境下的渗透时，建议使用系统自有的一些工具进行流量代理，这样的好处是可以规避杀软与监测，坏处是使用会比较繁琐，考验细心与耐心。流量代理总的来说共分为三类，分别是：透明代理，正向代理与反向代理。</p>
 <h3 id="SSH隧道隐匿"><a href="#SSH隧道隐匿" class="headerlink" title="SSH隧道隐匿"></a>SSH隧道隐匿</h3><h3 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h3><p>###正反向代理</p>
 <p>&ensp;&ensp; 这里开始详细说说正向代理与反向代理二者的意义，代理的核心思路就是部署在Client与Server端中间的一层服务，无论名称与结构发生何种变化，但是物理拓扑决定了其根本意义；正向代理就是Client在发送了流量后，通过这个代理做为实际上网络的真正出口点，相当于另一种意义上的NAT，但是只是应用层的套壳。反向代理则是Server端流量请求接收后回应的一个出口（对于Client来说是回应的入口），当然这儿的出口只是一次逻辑中的出口，反过来也可以叫做入口。对象不同会造成汉语的解释不同。如果我们针对隐匿中的回连来说，我们就相当于一个Server,当Client回连时，就可以利用反向代理，做一个出口，对我们来说是入口，对于Client来说是正向代理，是出口。这样的好处就是开放到互联网的接口是开放的，在出口接上一台Heroku，那么流量会在出口处变成Heroku的信息，Heroku对互联网是开放的，这一端无法溯源，Client端只能溯源到Heroku的节点。</p>
@@ -586,7 +587,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -608,7 +609,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
