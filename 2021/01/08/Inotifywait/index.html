@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-3232cloud.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-1616cloud.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/cloud.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="工具,Blue Team," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="![镜]!(https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;21&#x2F;7aITNkdw8OnoprZ.png)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inotifywait">
+<meta property="og:url" content="http://sunyyer.com/2021/01/08/Inotifywait/index.html">
+<meta property="og:site_name" content="云">
+<meta property="og:description" content="![镜]!(https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;21&#x2F;7aITNkdw8OnoprZ.png)">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-01-08T04:11:11.000Z">
+<meta property="article:modified_time" content="2021-12-20T16:18:42.079Z">
+<meta property="article:author" content="sunyyer">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="Blue Team">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://sunyyer.com/2021/01/08/Inotifywait/"/>
+
+
+
+
+
+  <title>Inotifywait | 云</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">云</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">雨声潺潺,像住在溪边,宁愿天天下雨,以为你是下雨不来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/01/08/Inotifywait/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Inotifywait</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-08T12:11:11+08:00">
+                2021-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E7%9B%91%E6%8E%A7/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/08/Inotifywait/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/08/Inotifywait/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>![镜]!(<a target="_blank" rel="noopener" href="https://s2.loli.net/2021/12/21/7aITNkdw8OnoprZ.png">https://s2.loli.net/2021/12/21/7aITNkdw8OnoprZ.png</a>)</p>
+<span id="more"></span>
+
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>一个linux的监控工具，依赖于intify(7)接口，适用于shell脚本类似的操作。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="yum源安装"><a href="#yum源安装" class="headerlink" title="yum源安装"></a>yum源安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum search inotify-tools</span><br><span class="line"> </span><br><span class="line">yum info inotify-tools</span><br><span class="line"> </span><br><span class="line">yum install inotify-tools</span><br></pre></td></tr></table></figure>
+<h2 id="源码编译安装"><a href="#源码编译安装" class="headerlink" title="源码编译安装"></a>源码编译安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">wget https://github.com/inotify-tools/inotify-tools/archive/refs/tags/3.21.9.6.tar.gz</span><br><span class="line">tar zxvf 3.21.9.6.tar.gz</span><br><span class="line">cd inotify-tools-3.21.9.6</span><br><span class="line">./configure</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h1 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h1><h2 id="命令表达式"><a href="#命令表达式" class="headerlink" title="命令表达式"></a>命令表达式</h2><p><code>inotifywait [-hcmrq] [-e &lt;event&gt; ] [-t &lt;seconds&gt; ] [--format &lt;fmt&gt; ] [--timefmt &lt;fmt&gt; ] &lt;file&gt; [ ... ]</code></p>
+<h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line">    -h, --help</span><br><span class="line">              Output some helpful usage information.</span><br><span class="line"> </span><br><span class="line">       @&lt;file&gt;</span><br><span class="line">              When  watching  a  directory  tree  recursively,  exclude  the specified file from being watched.  The file must be specified with a relative or absolute path according to whether a relative or absolute path is given for</span><br><span class="line">              watched directories.  If a specific path is explicitly both included and excluded, it will always be watched.</span><br><span class="line"> </span><br><span class="line">              Note: If you need to watch a directory or file whose name starts with @, give the absolute path.</span><br><span class="line"> </span><br><span class="line">       --fromfile &lt;file&gt;</span><br><span class="line">              Read filenames to watch or exclude from a file, one filename per line.  If filenames begin with @ they are excluded as described above.  If &lt;file&gt; is `-&#x27;, filenames are read from standard input.  Use this option  if  you</span><br><span class="line">              need to watch too many files to pass in as command line arguments.</span><br><span class="line"> </span><br><span class="line">       -m, --monitor</span><br><span class="line">              Instead of exiting after receiving a single event, execute indefinitely.  The default behaviour is to exit after the first event occurs.</span><br><span class="line"> </span><br><span class="line">       -d, --daemon</span><br><span class="line">              Same as --monitor, except run in the background logging events to a file that must be specified by --outfile. Implies --syslog.</span><br><span class="line"> </span><br><span class="line">       -o, --outfile &lt;file&gt;</span><br><span class="line">              Output events to &lt;file&gt; rather than stdout.</span><br><span class="line"> </span><br><span class="line">       -s, --syslog</span><br><span class="line">              Output errors to syslog(3) system log module rather than stderr.</span><br><span class="line"> </span><br><span class="line">       -r, --recursive</span><br><span class="line">              Watch all subdirectories of any directories passed as arguments.  Watches will be set up recursively to an unlimited depth.  Symbolic links are not traversed.  Newly created subdirectories will also be watched.</span><br><span class="line"> </span><br><span class="line">              Warning:  If you use this option while watching the root directory of a large tree, it may take quite a while until all inotify watches are established, and events will not be received in this time.  Also, since one ino‐</span><br><span class="line">              tify watch will be established per subdirectory, it is possible that the maximum amount of inotify watches per user will be reached.  The default maximum is 8192; it can  be  increased  by  writing  to  /proc/sys/fs/ino‐</span><br><span class="line">              tify/max_user_watches.</span><br><span class="line"> </span><br><span class="line">       -q, --quiet</span><br><span class="line">              If specified once, the program will be less verbose.  Specifically, it will not state when it has completed establishing all inotify watches.</span><br><span class="line"> </span><br><span class="line">              If specified twice, the program will output nothing at all, except in the case of fatal errors.</span><br><span class="line"> </span><br><span class="line">       --exclude &lt;pattern&gt;</span><br><span class="line">              Do not process any events whose filename matches the specified POSIX extended regular expression, case sensitive.</span><br><span class="line"> </span><br><span class="line">       --excludei &lt;pattern&gt;</span><br><span class="line">              Do not process any events whose filename matches the specified POSIX extended regular expression, case insensitive.</span><br><span class="line"> </span><br><span class="line">       -t &lt;seconds&gt;, --timeout &lt;seconds&gt;</span><br><span class="line">              Exit if an appropriate event has not occurred within &lt;seconds&gt; seconds. If &lt;seconds&gt; is zero (the default), wait indefinitely for an event.</span><br><span class="line"> </span><br><span class="line">       -e &lt;event&gt;, --event &lt;event&gt;</span><br><span class="line">              Listen for specific event(s) only.  The events which can be listened for are listed in the EVENTS section.  This option can be specified more than once.  If omitted, all events are listened for.</span><br><span class="line"> </span><br><span class="line">       -c, --csv</span><br><span class="line">              Output in CSV (comma-separated values) format.  This is useful when filenames may contain spaces, since in this case it is not safe to simply split the output at each space character.</span><br><span class="line"> </span><br><span class="line">       --timefmt &lt;fmt&gt;</span><br><span class="line">              Set a time format string as accepted by strftime(3) for use with the `%T&#x27; conversion in the --format option.</span><br><span class="line">--format &lt;fmt&gt;</span><br><span class="line">              Output in a user-specified format, using printf-like syntax.  The event strings output are limited to around 4000 characters and will be truncated to this length.  The following conversions are supported:</span><br><span class="line"> </span><br><span class="line">       %w     This will be replaced with the name of the Watched file on which an event occurred.</span><br><span class="line"> </span><br><span class="line">       %f     When an event occurs within a directory, this will be replaced with the name of the File which caused the event to occur.  Otherwise, this will be replaced with an empty string.</span><br><span class="line"> </span><br><span class="line">       %e     Replaced with the Event(s) which occurred, comma-separated.</span><br><span class="line"> </span><br><span class="line">       %Xe    Replaced with the Event(s) which occurred, separated by whichever character is in the place of `X&#x27;.</span><br><span class="line"> </span><br><span class="line">       %T     Replaced with the current Time in the format specified by the --timefmt option, which should be a format string suitable for passing to strftime(3).</span><br><span class="line"> </span><br><span class="line">EXIT STATUS</span><br><span class="line">       0      The program executed successfully, and an event occurred which was being listened for.</span><br><span class="line"> </span><br><span class="line">       1      An  error  occurred  in  execution of the program, or an event occurred which was not being listened for.  The latter generally occurs if something happens which forcibly removes the inotify watch, such as a watched file</span><br><span class="line">              being deleted or the filesystem containing a watched file being unmounted.</span><br><span class="line"> </span><br><span class="line">       2      The -t option was used and an event did not occur in the specified interval of time.</span><br><span class="line"> </span><br><span class="line">EVENTS</span><br><span class="line">       The following events are valid for use with the -e option:</span><br><span class="line"> </span><br><span class="line">       access A watched file or a file within a watched directory was read from.</span><br><span class="line"> </span><br><span class="line">       modify A watched file or a file within a watched directory was written to.</span><br><span class="line"> </span><br><span class="line">       attrib The metadata of a watched file or a file within a watched directory was modified.  This includes timestamps, file permissions, extended attributes etc.</span><br><span class="line"> </span><br><span class="line">       close_write</span><br><span class="line">              A watched file or a file within a watched directory was closed, after being opened in writeable mode.  This does not necessarily imply the file was written to.</span><br><span class="line"> </span><br><span class="line">       close_nowrite</span><br><span class="line">              A watched file or a file within a watched directory was closed, after being opened in read-only mode.</span><br><span class="line"> </span><br><span class="line">       close  A watched file or a file within a watched directory was closed, regardless of how it was opened.  Note that this is actually implemented simply by listening for both close_write and close_nowrite, hence all close  events</span><br><span class="line">              received will be output as one of these, not CLOSE.</span><br><span class="line"> </span><br><span class="line">       open   A watched file or a file within a watched directory was opened.</span><br><span class="line"> </span><br><span class="line">       moved_to</span><br><span class="line">              A file or directory was moved into a watched directory.  This event occurs even if the file is simply moved from and to the same directory.</span><br><span class="line"> </span><br><span class="line">       moved_from</span><br><span class="line">              A file or directory was moved from a watched directory.  This event occurs even if the file is simply moved from and to the same directory.</span><br><span class="line"> </span><br><span class="line">       move   A file or directory was moved from or to a watched directory.  Note that this is actually implemented simply by listening for both moved_to and moved_from, hence all close events received will be output as one or both of</span><br><span class="line">              these, not MOVE.</span><br><span class="line"> </span><br><span class="line">       move_self</span><br><span class="line">              A watched file or directory was moved. After this event, the file or directory is no longer being watched.</span><br><span class="line"> </span><br><span class="line">       create A file or directory was created within a watched directory.</span><br><span class="line"> </span><br><span class="line">       delete A file or directory within a watched directory was deleted.</span><br><span class="line">       delete_self</span><br><span class="line">              A watched file or directory was deleted.  After this event the file or directory is no longer being watched.  Note that this event can occur even if it is not explicitly being listened for.</span><br><span class="line"> </span><br><span class="line">       unmount</span><br><span class="line">              The filesystem on which a watched file or directory resides was unmounted.  After this event the file or directory is no longer being watched.  Note that this event can occur even if it is not explicitly  being  listened</span><br><span class="line">              to.</span><br></pre></td></tr></table></figure>
+<p>命令还是比较丰富的，自行翻译。</p>
+<h1 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h1><p>分享几个不错的脚本</p>
+<h2 id="监控某个目录下的文件改动并保存为日志"><a href="#监控某个目录下的文件改动并保存为日志" class="headerlink" title="监控某个目录下的文件改动并保存为日志"></a>监控某个目录下的文件改动并保存为日志</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">touch inotifywait.log</span><br><span class="line">chmod +x inotifywait.log</span><br><span class="line">inotifywait -mrq -e &#x27;create,delete,close_write,moved_to,attrib&#x27; /xx/xx/xx --timefmt &quot;%Y-%m-%d %H:%M&quot; --format &quot;%T %f %e&quot; -o &quot;/xx/xx/xx/inotifywait.log&quot; &amp;</span><br></pre></td></tr></table></figure>
+<h2 id="自动发送告警到邮箱"><a href="#自动发送告警到邮箱" class="headerlink" title="自动发送告警到邮箱"></a>自动发送告警到邮箱</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">touch inotifywait_email.sh</span><br><span class="line">chmod +x inotifywait_email.sh</span><br><span class="line">vi inotifywait_email.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"> </span><br><span class="line">DIR=$1</span><br><span class="line">inotifywait -mrq -e &#x27;create,delete,close_write,moved_to,attrib&#x27; $DIR --timefmt &quot;%Y-%m-%d %H:%M&quot; --format &quot;%T %f %e&quot;  | while read FILE</span><br><span class="line">do</span><br><span class="line">   cat $&#123;FILE&#125; | mail -s &quot;Alarm: $FILE ,Please verify security&quot; example@xx.com</span><br><span class="line">done</span><br><span class="line"> </span><br><span class="line">./inotifywait_email.sh /xx/xx &amp;</span><br></pre></td></tr></table></figure>
+<h2 id="按日志行数自动删除日志多余内容"><a href="#按日志行数自动删除日志多余内容" class="headerlink" title="按日志行数自动删除日志多余内容"></a>按日志行数自动删除日志多余内容</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">touch inotifywait_delete.sh</span><br><span class="line">chmod +x inotifywait_delete.sh</span><br><span class="line">vi inotifywait_delete.sh</span><br><span class="line"> </span><br><span class="line">#!/bin/sh</span><br><span class="line"> </span><br><span class="line">function limit_count_log()&#123; </span><br><span class="line">    local logfile=$1 </span><br><span class="line">    local maxline=$2</span><br><span class="line"> </span><br><span class="line">    if [ ! -f &quot;$logfile&quot; ]; then</span><br><span class="line">    sudo touch $logfile</span><br><span class="line">    fi</span><br><span class="line">    linecount=`/usr/bin/wc -l $logfile|awk &#x27;&#123;print $1&#125;&#x27;`; </span><br><span class="line">    if [ $&#123;linecount&#125; -gt $&#123;maxline&#125; ];then   </span><br><span class="line">        delcount=`expr $&#123;linecount&#125; - $&#123;maxline&#125;`;      </span><br><span class="line">        sudo sed -i &quot;1,$&#123;delcount&#125;d&quot; $logfile   </span><br><span class="line">    else   </span><br><span class="line">        echo  $linecount</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"># running</span><br><span class="line">while true</span><br><span class="line">do</span><br><span class="line">    limit_count_log /xx/xx/inotifywait.log 20000</span><br><span class="line">    sleep 60</span><br><span class="line">done</span><br><span class="line">#wq save it</span><br><span class="line"> </span><br><span class="line">./inotifywait_delete.sh &amp;</span><br></pre></td></tr></table></figure>
+<h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><p>更多的问题可以参考Stackoverflow<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/tagged/inotifywait">link</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    sunyyer
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://sunyyer.com/2021/01/08/Inotifywait/" title="Inotifywait">http://sunyyer.com/2021/01/08/Inotifywait/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"># 工具</a>
+          
+            <a href="/tags/Blue-Team/" rel="tag"># Blue Team</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/03/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="next" title="登录注册页面渗透测试">
+                <i class="fa fa-chevron-left"></i> 登录注册页面渗透测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/19/SQLMap/" rel="prev" title="SQLMap">
+                SQLMap <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yum%E6%BA%90%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">yum源安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">源码编译安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%80%89%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">基本选项</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">命令表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">3.2.</span> <span class="nav-text">基本命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC"><span class="nav-number">4.</span> <span class="nav-text">shell脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E6%9F%90%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E6%94%B9%E5%8A%A8%E5%B9%B6%E4%BF%9D%E5%AD%98%E4%B8%BA%E6%97%A5%E5%BF%97"><span class="nav-number">4.1.</span> <span class="nav-text">监控某个目录下的文件改动并保存为日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E5%91%8A%E8%AD%A6%E5%88%B0%E9%82%AE%E7%AE%B1"><span class="nav-number">4.2.</span> <span class="nav-text">自动发送告警到邮箱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%89%E6%97%A5%E5%BF%97%E8%A1%8C%E6%95%B0%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4%E6%97%A5%E5%BF%97%E5%A4%9A%E4%BD%99%E5%86%85%E5%AE%B9"><span class="nav-number">4.3.</span> <span class="nav-text">按日志行数自动删除日志多余内容</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FAQ"><span class="nav-number">5.</span> <span class="nav-text">FAQ</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sunyyer</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'IhfX5WEErU6TrVrSPhuSibXl-gzGzoHsz',
+        appKey: 'LbVYIKKbnW4la4hc4kS5l8xA',
+        placeholder: 'welcome',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/click_show.js"></script>
+<!--显示标签栏标题 -->
+<script type="text/javascript" src="/js/funnytitle.js"></script>
+<!--动态线条背景-->
+<script type="text/javascript"
+color="112,128,144" opacity='1' zIndex="-2" count="140" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!--背景下雪-->
+<script type="text/javascript" src="/js/snow.js"></script>
