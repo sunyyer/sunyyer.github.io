@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-3232cloud.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-1616cloud.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/cloud.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="域渗透之完全绕开安全组件Summary这两周一直在做域内DC渗透的工作，持续了较长时间，之前对实战中的域内渗透，尤其是域渗透的安全组件防御了解颇少，所以过程也是磕磕绊绊，不过值得庆祝的是最后工作圆满完成。实战与靶机环境差别很大，内网的微软ATP组件、Fortinet 与CS(CrowdStrike)的Falcon安全组件过于强大，很多工具都是根本无法使用的，免杀后会有各种问题.尤其是CS，不愧为北">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云">
+<meta property="og:url" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/index.html">
+<meta property="og:site_name" content="云">
+<meta property="og:description" content="域渗透之完全绕开安全组件Summary这两周一直在做域内DC渗透的工作，持续了较长时间，之前对实战中的域内渗透，尤其是域渗透的安全组件防御了解颇少，所以过程也是磕磕绊绊，不过值得庆祝的是最后工作圆满完成。实战与靶机环境差别很大，内网的微软ATP组件、Fortinet 与CS(CrowdStrike)的Falcon安全组件过于强大，很多工具都是根本无法使用的，免杀后会有各种问题.尤其是CS，不愧为北">
+<meta property="og:locale">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/LAN管理器身份验证.PNG">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/PetitPotam中继.PNG">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/攻击尝试1_LI.jpg">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/DCSYNC_LI.jpg">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/成功_LI.jpg">
+<meta property="og:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/image2022-2-18_14-3-31.png">
+<meta property="article:published_time" content="2022-03-20T05:34:45.419Z">
+<meta property="article:modified_time" content="2022-03-26T09:05:17.751Z">
+<meta property="article:author" content="sunyyer">
+<meta property="article:tag" content="生活">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users/suney/Pictures/DC/LAN管理器身份验证.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://sunyyer.com/2022/03/20/Domain Colltroller Penetration Test(域渗透) (2)/"/>
+
+
+
+
+
+  <title> | 云</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">云</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">雨声潺潺,像住在溪边,宁愿天天下雨,以为你是下雨不来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-20T13:34:45+08:00">
+                2022-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="域渗透之完全绕开安全组件"><a href="#域渗透之完全绕开安全组件" class="headerlink" title="域渗透之完全绕开安全组件"></a>域渗透之完全绕开安全组件</h1><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>这两周一直在做域内DC渗透的工作，持续了较长时间，之前对实战中的域内渗透，尤其是域渗透的安全组件防御了解颇少，所以过程也是磕磕绊绊，不过值得庆祝的是最后工作圆满完成。实战与靶机环境差别很大，内网的微软ATP组件、Fortinet 与CS(CrowdStrike)的Falcon安全组件过于强大，很多工具都是根本无法使用的，免杀后会有各种问题.尤其是CS，不愧为北美最强EDR。</p>
+<p>本地免去了隐蔽隧道联通外网搭建的过程，简单了一些，因为微软漏洞一直有专门的TSG打补丁，所以单独靠CVE难比登天。本文就这段时间的行动与思考做一个记录，Rspect!</p>
+<h2 id="Information-collection"><a href="#Information-collection" class="headerlink" title="Information collection"></a>Information collection</h2><p>首先是常规的一些用户权限，域内环境等信息获取。我的测试账户是User Domain.</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">主机信息获取</span><br><span class="line">systeminfo <span class="comment">#在这里就遇到了问题，按理说域内主机打的KB都会记录在里面，但是我发现里面仅有5个补丁，说明windwos补丁是由DC与安全组件统一去打，并不会记录在域内的用户主机上.</span></span><br><span class="line">tasklist <span class="comment">#看到防护组件是falcon与Defender ATP,当然这属于多次一举,事先已经得到这些信息。</span></span><br><span class="line">角色网络域信息</span><br><span class="line">ipconfig /all <span class="comment">#看到主机名与IP地址信息，DNS后显示域名xxx.org存在，确定Domain name.</span></span><br><span class="line">net view /domain <span class="comment">#直接报错。</span></span><br><span class="line">net time /domain <span class="comment">#显示出了domain,再通过nslookup查到IP地址，确认此账户的DC name。</span></span><br><span class="line">用户信息</span><br><span class="line">whoami /all <span class="comment"># 查看一下权限，确认能不呢启动windows系统进程，powershell等。</span></span><br><span class="line">net <span class="built_in">group</span> <span class="string">&quot;Domain Admins&quot;</span> /all <span class="comment">#查询域管理员账户,这个比较关键，为后面DESync做铺垫</span></span><br><span class="line">net <span class="built_in">group</span> <span class="string">&quot;Enterprise Admins&quot;</span> /domain <span class="comment">#查询管理员用户组</span></span><br><span class="line">net <span class="built_in">group</span> <span class="string">&quot;Domain Controllers&quot;</span> /domain <span class="comment">#查询域控制器，查到光中国就55个域，着实是大公司了。</span></span><br><span class="line">SPN查询服务信息</span><br><span class="line">setspn <span class="literal">-q</span> */* | findstr <span class="string">&quot;xxx&quot;</span> <span class="comment">#查询服务信息，主要啊是去搜了LDAP，共享主机和管道的开启状态。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h2><p>提前跟SOC部门打好了招呼，直接把测试机的安全级别调为最低，但是仅仅也就是能使用Powershell进程了。尝试免杀版，git clone，unzip，然后芭比Q了。。Defender与Falcon安全组件同时告警，意料之中，不过可以在关掉我网络的三分钟之内一把梭哈。<code>privilege::debug</code> <code>sekulsa:logonpasswords</code>，时间就是效率。打开一看，有点失望，除了本地的几个账户的Hash，并无其他，试试DESyncdump，报错，查无信息，主机断网。。半小时后收到SOC联系，赶忙删除，清空回收站。</p>
+<p>一计不成，再生一计，免杀。编译特征，各种免杀手法中挑了两个靠谱的，<code>Out-EncryptedScript与Xencrpyt</code>,一气呵成，打开Powershell，run。两分钟后，电脑失去连接。。。邮箱轰炸，SOC又发来信息，赶忙删除，看了看卡巴与cs论坛，人家老美原来已经对mimikatz的这些方法全部免疫。此时此刻我提桶跑路的心都有了，以前和360火绒打交道的我哪见过这阵势，连evil.ps1都给你杀的明明白白。再试试用内置服务+源码这条路。xsl本地加载，咦？好像没有告警，成功了？来不及按捺心中的激动之情，我赶忙尝试<code>sekulsal::xxxlgoon</code>,报错。好家伙，我直呼好家伙。看来CS的安全组件直接会将mimikatz的底裤都给找到，不慌，喝杯茶等SOC给我发邮件吧。。。</p>
+<h2 id="Tools篇"><a href="#Tools篇" class="headerlink" title="Tools篇"></a>Tools篇</h2><p>在又被批斗一次后，我决定放弃Mimikatz这个维持生计的家伙了。想办法用别的工具，一天已过，我除了被警告三次外一事无成，再一次加深了我对网络安全这个行业的担忧。要打仗了没枪可怎么行，从Github找吧，自己编译是不可能的，这辈子都学不会~</p>
+<p>最终把目标锁定在了Impacket组件、Powershell ps组件与Invoke组件。通过昨天的侦察，不出所料的话Powershell 与Invoke会被直接干掉，但不死心，多个工具多条路，试试就逝世，打开Invoke函数Process和<code>Powershell Mudle</code>两分钟后，我的邮箱又多了四封邮件，要不你干脆把我杀了吧。</p>
+<p>不幸的万幸是这次SOC没有给我发信息，估计是已经麻木了，嚯嚯，阶段性的胜利成果。言归正传，最终确定的工具为Impacker组件的py版本，因为本地客户端.exe通杀。单方面宣布python天下第一！</p>
+<p>Impacket简单理解为一些基本网络协议的python编程类库。有了它，就可以实现一些如SMB、EFSRpc、LDAP、NTLM、KerBeros的通信连接。这是很有必要的。因为后续的Attack过程会用到很多重要脚本如<code>secretdump.py</code>这类。</p>
+<h2 id="PotitPetam初探"><a href="#PotitPetam初探" class="headerlink" title="PotitPetam初探"></a>PotitPetam初探</h2><p>查资料发现PotitPetam是Printerbug在被大范围修复后的又一攻击渠道，最开始利用EfsRpcOpenFileRaw函数对其他主机做身份验证，微软虽然在后面的补丁中尝试修复问题，但是新出现的EfsRpc函数仍可以利用，我们需要用它来获取NTLM-Hash，简单看了下原理，似懂非懂。此次的攻击由于ADCS限制，不管是Relay还是约束委派都无法直接利用，且会被falcon监控到。所以尝试使用一种凭证降级的攻击利用方法，先获取凭证再说。整个Attack Pocess就像Web中的MITM（中间人攻击），我们必须在域内的一台主机中开启监听网卡，然后通过MS-EFSR向靶机发送验证来获取关键的DC凭证，所以必须知道一台域内通过NTLM认证可连接的DC主机，并且可以通过lsarpc或者其他pipe联通。不然无法进行PotitPetam，而且由于最新的DC管理默认NTLMv2认证，所以我们需要进行降级，去掉ssp。</p>
+<h3 id="Step1"><a href="#Step1" class="headerlink" title="Step1:"></a>Step1:</h3><p>攻击机就选定为这台测试机，客户机使用我的本机计算机，他们虽然在不同的子域内，但是彼此是相互可以联通的，DC1为本地机的域1，DC2为本地机的DNS备选域2。以防不测。在测试机进行PotitPetam。首先查看本地Lan Manage身份管理，它会决定和客户端与DC的身份验证形式，默认是未定义的，如果是NTLMv2验证形式，在后续抓取口令的时候就需要进行降级处理；其次查看匿名访问的命名管道，默认是空的，如果要使用的话必须得有一个凭据，还好我有</p>
+<p><img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\LAN管理器身份验证.PNG" alt="LAN管理器身份验证"></p>
+<h3 id="Step2"><a href="#Step2" class="headerlink" title="Step2:"></a>Step2:</h3><p>这儿利用PetitPotam的方式还是蛮多，gihub有现成的脚本，也可以调用EFSRPC函数去做连接，如果测试环境没有开lsarpc的话还是直接调用函数吧，如图：</p>
+<p><img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\PetitPotam中继.PNG"></p>
+<p>通过EfRPEncryptFileSrv() EFSRPC/lsarpc smb管道，like:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; request = EfsRpcEncryptFileSrv()</span><br><span class="line">&gt;&gt; request[<span class="string">&#x27;FileName&#x27;</span>] = <span class="string">&#x27;\\\\%s\\path\\test.txt\x00&#x27;</span> %listener</span><br><span class="line"><span class="comment">#request[&#x27;Flag&#x27;] = 0</span></span><br><span class="line"><span class="comment">#request.dump()</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Step3"><a href="#Step3" class="headerlink" title="Step3:"></a>Step3:</h3><p>在另一台DC3中做responder监听，ROOT权限才可开启，如果没有root权限的话，需要使用别的工具了。可以看到已经成功抓取了NTLMv1-ssp的凭证，如图：</p>
+<p><img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\攻击尝试1_LI.jpg"></p>
+<h3 id="Step4"><a href="#Step4" class="headerlink" title="Step4:"></a>Step4:</h3><p>接下来就是NTLM降级与取消ssp处理了，有两种方便的方法，一种是直接在responder中修改challeng的值为<code>1122334455667788</code>,另一种是使用在线网站或工具解密<code>NTLM Cracking</code>.like：</p>
+<p>![NtlmV1 Hash](C:\Users\suney\Pictures\DC\NtlmV1 Hash.png)</p>
+<h3 id="Step5"><a href="#Step5" class="headerlink" title="Step5:"></a>Step5:</h3><p>到这儿就已经拥有了DC域管理员的凭证哈希，可以将Hash拖出来跑hashcat或者彩虹表了，不过一般DC的密码都是强密码，16位强密码破解起来难度极大，就算做了字典表也得跑很久，所以这儿再使用NTLM Relay的方式尝试。</p>
+<p><code>https://www.onlinehashcrack.com/</code></p>
+<h3 id="Step6："><a href="#Step6：" class="headerlink" title="Step6："></a>Step6：</h3><p>DCSync,使用Impacket套件中的<code>secretdump.py</code>去横向移动获取更多的域管理员和域用户的Hash值，将之前获取到的DC凭证带入，加上域用户名：</p>
+<p><img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\DCSYNC_LI.jpg" alt="DCSYNC_LI"></p>
+<h3 id="Step7"><a href="#Step7" class="headerlink" title="Step7:"></a>Step7:</h3><p>PTH,哈希传递我们使用Impacket中的<code>smbclient.py</code>,这是一个共享smb管道，将DC管理员（权限最高）的哈希值与用户名放入，执行成功，就可以增删改查文件了。如图：<img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\成功_LI.jpg" alt="成功_LI"></p>
+<p>使用提权工具提权其他DC的其他非管理员用户，查看使用过smb的用户，替换哈希，提升权限，这儿我用incognito2尝试了一台域内测试机,抱着试试看的态度VS改了一下特征值，神奇的是竟然没有产生告警，有点奇怪。<img src="/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/Users\suney\Pictures\DC\image2022-2-18_14-3-31.png" alt="image2022-2-18_14-3-31"></p>
+<p>到这儿任务已经完成，存在PetitPotam问题。且可以成功利用获取DC信息，且整个过程绕过安全组件。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    sunyyer
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/" title="">http://sunyyer.com/2022/03/20/Domain%20Colltroller%20Penetration%20Test(%E5%9F%9F%E6%B8%97%E9%80%8F)%20(2)/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/02/10/Introduction/" rel="next" title="国内VPS访问国外源">
+                <i class="fa fa-chevron-left"></i> 国内VPS访问国外源
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/03/24/CVE-2021-45232%20Apache%20APISIX%20RCE/" rel="prev" title="CVE-2021-45232 Apache APISIX RCE">
+                CVE-2021-45232 Apache APISIX RCE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E6%B8%97%E9%80%8F%E4%B9%8B%E5%AE%8C%E5%85%A8%E7%BB%95%E5%BC%80%E5%AE%89%E5%85%A8%E7%BB%84%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">域渗透之完全绕开安全组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">1.1.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Information-collection"><span class="nav-number">1.2.</span> <span class="nav-text">Information collection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mimikatz"><span class="nav-number">1.3.</span> <span class="nav-text">Mimikatz</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools%E7%AF%87"><span class="nav-number">1.4.</span> <span class="nav-text">Tools篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PotitPetam%E5%88%9D%E6%8E%A2"><span class="nav-number">1.5.</span> <span class="nav-text">PotitPetam初探</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step1"><span class="nav-number">1.5.1.</span> <span class="nav-text">Step1:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step2"><span class="nav-number">1.5.2.</span> <span class="nav-text">Step2:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step3"><span class="nav-number">1.5.3.</span> <span class="nav-text">Step3:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step4"><span class="nav-number">1.5.4.</span> <span class="nav-text">Step4:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step5"><span class="nav-number">1.5.5.</span> <span class="nav-text">Step5:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step6%EF%BC%9A"><span class="nav-number">1.5.6.</span> <span class="nav-text">Step6：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step7"><span class="nav-number">1.5.7.</span> <span class="nav-text">Step7:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">1.6.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2021 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sunyyer</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'IhfX5WEErU6TrVrSPhuSibXl-gzGzoHsz',
+        appKey: 'LbVYIKKbnW4la4hc4kS5l8xA',
+        placeholder: 'welcome',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/click_show.js"></script>
+<!--显示标签栏标题 -->
+<script type="text/javascript" src="/js/funnytitle.js"></script>
+<!--动态线条背景-->
+<script type="text/javascript"
+color="112,128,144" opacity='1' zIndex="-2" count="140" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!--背景下雪-->
+<script type="text/javascript" src="/js/snow.js"></script>

